@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+  	xmlns:p="http://primefaces.org/ui"  >
+    <h:head>
+    	<meta charset="UTF-8"></meta> 
+        <title>REQUESTS</title>        
+        <link rel="icon"       type="image/png"	href="http://127.0.0.1:8080/HallsJSF/favicon.png" />
+        <link rel="stylesheet" type="text/css"  href="http://127.0.0.1:8080/HallsJSF/css/styles.css" />
+        <link rel="stylesheet" type="text/css"  href="http://127.0.0.1:8080/HallsJSF/css/hover.css" />
+        <script src="http://127.0.0.1:8080/HallsJSF/js/js_settings.js"></script>
+    </h:head>
+    <h:body> 
+    	<p:ajaxStatus style="display:block;margin-bottom:2em;position:fixed;top:49%;left:50%;">
+		    <f:facet name="start">
+		        <p:graphicImage value=".\..\..\img\723.GIF" />
+		    </f:facet>
+		    <f:facet name="success">
+		        <p:graphicImage value=".\..\..\img\723.GIF" />
+		    </f:facet>      
+		</p:ajaxStatus>   
+        <div class="nav">
+            <ul>
+            	<li class ="pulse">
+                    <a href=".\index_admin.xhtml">HOME</a>
+            	</li>
+            	<li class ="pulse">
+                    <a href=".\request.xhtml">REQUEST</a>
+                </li>
+            	<li class ="pulse">
+                    <a href=".\adm_schedule.xhtml">REQUESTS</a>
+                </li>
+                <li class ="pulse">
+                    <a href=".\schedule_admin.xhtml">SCHEDULE</a>
+                </li>
+              	<li class ="pulse">
+                    <a href=".\halls.xhtml">HALLS</a>
+                </li>
+                <li class ="pulse">
+                    <a href=".\noms.xhtml">NOMS</a>
+            	</li>
+            	<li class ="pulse">
+                    <a href=".\equipment.xhtml">INVETORY</a>
+                </li>
+                <li class ="pulse">	            
+					<h:form>	                                	
+	            	  	<h:commandLink   value="Logout #{userLoginView.loggedUser}"  action="#{userLoginView.logout}"></h:commandLink>	                	
+					</h:form>                
+                </li>
+        	</ul>
+        </div>
+        
+		
+    	<h:form id="form">
+    		<p:growl id="messages" showDetail="true" />
+    		<p:remoteCommand autoRun="true" actionListener="#{requestViewer.getAllRequestsAdmin}" update="messages myPanelGrid"></p:remoteCommand>
+    		    		
+    		<p:layout style="margin-left: auto; margin-right: auto; min-width:970px; min-height:400px;height:600px;width:1250px;" id="myPanelGrid" >
+    			<p:layoutUnit position="west" size="450" maxSize="460" id="commands">
+			    	<h:panelGrid columnClasses="value" style="width:400px;">
+				        <h3>Halls requests</h3>
+				        <p:schedule id="schedule" editable="true" draggable="true" value="#{requestViewer.eventModel}" locale="bg_short" centerHeaderTemplate="title" widgetVar="myschedule" timeZone="GMT+2">
+				            <p:ajax event="eventSelect" listener="#{requestViewer.onEventSelect}" update="myPanelGridInfo myPanelGrid2 :form1:infoDlg" />				            
+				            <p:ajax event="eventMove"   listener="#{requestViewer.onEventMove}"   update="myPanelGridInfo myPanelGrid2 :form1:infoDlg" />		            
+		            		<p:ajax event="eventResize" listener="#{requestViewer.onEventResize}" update="myPanelGridInfo myPanelGrid2 :form1:infoDlg" />
+				        </p:schedule>				        
+			    	</h:panelGrid>			 		
+			    </p:layoutUnit>
+			    
+			    <p:layoutUnit position="center" style="width:660px;" id="myPanelGrid1">
+			    	<p:panel id="myPanelGridInfo" style="width:98%; height:10%;">
+			    	 	<h:outputLabel for="title" value="Name(Desc):" />
+			            <p:inputText id="title" style="width:100px" value="#{requestViewer.event.title}" update=":form1:infoDlg"/>
+			 
+				        <h:outputLabel for="from" style="width:100px" value=" Start:" />
+				        <p:calendar id="from" value="#{requestViewer.event.startDate}" navigator="true" mask="true" pattern="dd-MM-yyyy HH:mm" update=":form1:infoDlg"/>
+			            			
+			            <h:outputLabel for="to" style="width:100px" value=" End:" />
+			            <p:calendar id="to" value="#{requestViewer.event.endDate}" navigator="true" mask="true" pattern="dd-MM-yyyy HH:mm" update=":form1:infoDlg"/>			            
+			    	</p:panel>
+			    	
+			    	<p:panel id="myPanelGrid2" style="position:relative; width:98%; height:65%;">
+			    	</p:panel>
+			    	
+			    	<p:panel id="myPanelGridComm" style="width:98%; height:20%;">
+			    		<h:panelGrid columns="4" cellpadding="5">			    		
+							<p:outputLabel for="somHalls" value="Hall: "></p:outputLabel>
+							<p:selectOneMenu id="somHalls" value="#{requestViewer.hallId}" effect="fade" style="width:100%;" >
+					            <p:ajax  listener="#{requestViewer.getSelectedHall}"></p:ajax>
+					            <f:selectItems value="#{requestViewer.halls}" var="c" itemLabel="#{c.capacity} #{c.name}" itemValue="#{c.id}" />				            
+					        </p:selectOneMenu>
+					        
+					        <p:outputLabel for="somCType" value="Type: "></p:outputLabel>
+					        <p:selectOneMenu id="somCType" value="#{requestViewer.meetingType}" effect="fade" style="width:100%;" >
+					            <p:ajax  listener="#{requestViewer.getSelectedHall}"></p:ajax>
+					            <f:selectItems value="#{requestViewer.meetingTypes}" var="c" itemLabel="#{c.desc}" itemValue="#{c.id}" />				            
+					        </p:selectOneMenu>
+					        
+					        <p:outputLabel for="description" value="Desc: "></p:outputLabel>
+					        <p:inputText id="description" value="#{requestViewer.meetingDesc}" style="width:100%;"></p:inputText>
+					        
+					        <p:outputLabel for="makeMeeting" value=" "></p:outputLabel>					        		
+							<p:commandButton id="makeMeeting" value="Create meeting" update=":form1:infoDlg" oncomplete="PF('eventDialog').show();" style="width:100%;" />
+			    		</h:panelGrid>
+			    	</p:panel>
+			    </p:layoutUnit>
+		    </p:layout>    
+		</h:form>
+		
+		<h:form id="form1">
+	 		<p:growl id="messages" showDetail="true" />
+	    	<p:dialog widgetVar="eventDialog" header="Request's info" modal="true" showEffect="explode" hideEffect="clip" id="infoDlg">
+	        	<h:panelGrid id="eventDetails" columns="2">
+		            <h:outputLabel for="title1" value="Title:" />
+	            	<p:inputText style="width:300px;" id="title1" value="#{requestViewer.event.title}"/>
+	 
+		            <h:outputLabel for="from1" value="Start:" />
+	            	<p:inputMask style="width:300px;" id="from1" value="#{requestViewer.event.startDate}" mask="99-99-9999 99:99">
+		                <f:convertDateTime pattern="dd-MM-yyyy HH:mm" timeZone="GMT+2"/>
+	            	</p:inputMask>
+	
+	            	<h:outputLabel for="to1" value="End:" />            	
+	            	<p:inputMask style="width:300px;" id="to1" value="#{requestViewer.event.endDate}" mask="99-99-9999 99:99">
+		                <f:convertDateTime pattern="dd-MM-yyyy HH:mm" timeZone="GMT+2"/>
+	            	</p:inputMask>
+	            	
+	            	<p:commandButton id="btnExit" value="Exit" oncomplete="PF('eventDialog').hide();" />
+	            	<p:commandButton style="width:310px;" id="addButton" value="Confirm" actionListener="#{requestViewer.insert}" update="messages" oncomplete="PF('myschedule').update(); PF('eventDialog').hide();" />           	
+	        	</h:panelGrid>
+	    	</p:dialog>
+		</h:form>
+    </h:body>    
+    <footer>
+    </footer>
+</html>

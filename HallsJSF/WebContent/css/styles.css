@@ -1,0 +1,222 @@
+h3 {
+	margin-left: auto;
+	margin-right: auto;
+	text-align: center;
+}
+.rightAllign{
+	float:right;
+	
+}
+
+.value {
+	width: 850px;
+}		    
+
+body {
+    /*background-color:lightblue;*/
+    background-image: URL('http://127.0.0.1:8080/HallsJSF/img/small-conference-hall.jpg');
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-position: center top;
+}
+
+.ui-widget-content {
+	opacity:0.9;
+}
+
+.mycenter {
+	margin-left: auto;
+	margin-right: auto;
+	/*border:1px solid black;*/
+	width:850px;		
+}
+
+.nav {	
+	margin-left: auto;
+	margin-right: auto;
+	width: 850px;	
+}
+
+.nav ul li ul{
+    display:none;
+}
+
+.nav ul li:hover > ul {
+    margin:5px; 
+    padding:5px;
+    display:block;    
+}
+
+.nav ul {
+    padding      : 0px 25px;
+    border-radius: 10px;    
+    list-style   : none;
+    position     : relative;
+    display      : inline-block;
+    background   : linear-gradient ( top, #efefef, 0%, #bbbbbb, 100%);
+    background   : -moz-linear-gradient ( top, #efefef, 0%, #bbbbbb, 100%);
+    background   : -webkit-linear-gradient ( top, #efefef, 0%, #bbbbbb, 100%);
+    box-shadow   : 0px 0px 9px rgba(0,0,0,0.35);    		
+	width        : 100%;	
+}
+
+.nav ul li {
+    float:left;
+    min-width:60px;
+    text-decoration:none;
+}
+
+.nav ul li ul li{
+    float:left;
+    min-width:60px;
+    text-decoration:none;
+}
+
+.nav ul li a {
+    padding: 5px 10px 5px 10px;
+    display  : block;
+    /*color    : #757575;*/
+	text-decoration:none;
+}
+
+.nav ul li a:link {
+	text-decoration:none;
+	/*color:yellow;*/
+}
+.nav ul li:hover {
+    background:#00FF00;
+    background:linear-gradient(top, #4f5964, 0%, #5f6975, 100%);
+    background:-moz-linear-gradient (top, #4f5964, 0%, #5f6975, 100%);
+    background:-webkit-linear-gradient(top, #4f5964, 0%, #5f6975, 100%);
+}
+
+ .nav ul li:hover a {
+    color:#FFF;
+}
+
+.nav ul li:hover > ul { margin:1px; padding:5px;}
+.nav ul li:hover > ul li { float:left; display:block; }
+.nav ul li:hover > ul li a { color:#666; min-width:80px; }
+.nav ul li:hover > ul li a:hover { color:#FFF; }
+
+.nav ul li { position:relative; }
+.nav ul li ul { position:absolute; top:27px; left:0px; }
+
+#facebook-icon {
+  background: red;
+  text-indent: -999em;
+  width: 100px;
+  height: 110px;
+  border-radius: 5px;
+  position: relative;
+  overflow: hidden;
+  border: 15px solid red;
+  border-bottom: 0;
+}
+
+#facebook-icon::before {
+  content: "/20";
+  position: absolute;
+  background: red;
+  width: 40px;
+  height: 90px;
+  bottom: -30px;
+  right: -37px;
+  border: 20px solid #eee;
+  border-radius: 25px;
+}
+
+#facebook-icon::after {
+  content: "/20";
+  position: absolute;
+  width: 55px;
+  top: 50px;
+  height: 20px;
+  background: #eee;
+  right: 5px;
+}
+.shaping_img {
+	float: left;
+    border:2px solid;
+	width: 150px;
+	height: 150px;
+	border-radius: 50%;
+    shape-outside: circle();
+	shape-margin: 15px;
+}
+
+.shapedDiv {
+    border-width: 1px 12px 1px 12px;
+    border-style: double;
+    border-color: violet;
+    border-radius:30px 30px 60px 60px;
+    -moz-border-radius:40px 40px 60px 60px;
+    -webkit-border-radius:40px 40px 60px 60px;
+    min-width:100px;
+    min-height:50px;
+    width:100px;
+    float:left;
+ }  
+ 
+ .shapedDiv:hover{
+    background-color:rgba(0,0,0,0.08);
+ }
+ 
+ .centered {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width:300px;
+  height:125px;
+  margin-top: -65px;
+  margin-left: -150px;
+  background-image: URL('http://127.0.0.1:8080/HallsJSF/img/login/login_fon.png');			  
+}
+
+.loginTextBtn{
+  background-image: URL('http://127.0.0.1:8080/HallsJSF/img/login/balon_za_text.png');
+}
+
+.input-container {
+	position:relative;
+    background: URL('http://127.0.0.1:8080/HallsJSF/img/login/balon_za_text.png') no-repeat;
+    width:140px;
+    height:25px;
+    border: 0px;
+    /*float:right;*/
+}
+
+.input-container input{
+	position:absolute;
+	left:25px;
+	top:0px;			    
+    border:0px;			    
+    background:transparent;			    
+    width:111px;			    
+}
+   .input-container input:focus{
+ 			outline: 0;
+}
+
+.OkButton {
+ 	background: URL('http://127.0.0.1:8080/HallsJSF/img/login/buton.png') no-repeat;
+ 	position: absolute;
+ 	left: 105px;
+ 	top:100px;
+	border: none;
+    width: 91px;
+    height:24px;
+}
+
+.RegButton {
+ 	background: URL('http://127.0.0.1:8080/HallsJSF/img/login/buton.png') no-repeat;
+ 	position: absolute;
+ 	left: 205px;
+ 	top:100px;
+ 	cursor:pointer;
+    border: none;
+    width: 91px;
+    height:24px;
+    text-align:center;             	
+    text-decoration: none;             	
+}

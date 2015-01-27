@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+  	xmlns:p="http://primefaces.org/ui"  >
+    <h:head>
+    	<meta charset="UTF-8"></meta> 
+        <title>Halls</title>
+		<link rel="icon"       type="image/png"	href="http://127.0.0.1:8080/HallsJSF/favicon.png" />
+        <link rel="stylesheet" type="text/css"  href="http://127.0.0.1:8080/HallsJSF/css/styles.css" />
+        <link rel="stylesheet" type="text/css"  href="http://127.0.0.1:8080/HallsJSF/css/hover.css" />
+        <script src="http://127.0.0.1:8080/HallsJSF/js/js_settings.js"></script>
+    </h:head>
+    <h:body>    
+        <div class="nav">
+            <ul>
+            	<li class ="pulse">
+                    <a href=".\index_admin.xhtml">HOME</a>
+            	</li>
+            	<li class ="pulse">
+                    <a href=".\request.xhtml">REQUEST</a>
+                </li>
+            	<li class ="pulse">
+                    <a href=".\adm_schedule.xhtml">REQUESTS</a>
+                </li>
+                <li class ="pulse">
+                    <a href=".\schedule_admin.xhtml">SCHEDULE</a>
+                </li>
+              	<li class ="pulse">
+                    <a href=".\halls.xhtml">HALLS</a>
+                </li>
+                <li class ="pulse">
+                    <a href=".\noms.xhtml">NOMS</a>
+            	</li>
+            	<li class ="pulse">
+                    <a href=".\equipment.xhtml">INVETORY</a>
+                </li>
+                <li class ="pulse">	            
+					<h:form>	                                	
+	            	  	<h:commandLink   value="Logout #{userLoginView.loggedUser}"  action="#{userLoginView.logout}"></h:commandLink>	                	
+					</h:form>                
+                </li>
+        	</ul>
+        </div>
+		
+		<p:ajaxStatus style="display:block;margin-bottom:2em;position:fixed;top:10px;left:50%;">
+		    <f:facet name="start">
+		        <p:graphicImage value=".\..\..\img\723.GIF" />
+		    </f:facet>
+		    <f:facet name="success">
+		        <p:graphicImage value=".\..\..\img\723.GIF" />
+		    </f:facet>      
+		</p:ajaxStatus>
+        
+        <h:form  id="form">       		        	
+        	<p:growl id="messages" showDetail="true"/>	
+        	<p:remoteCommand autoRun="true" actionListener="#{dataExporterView.getAllHalls}" update=":form:tbl_halls messages"></p:remoteCommand>
+        	<p:layout style="margin-left: auto; margin-right: auto; min-width:970px; min-height:400px;height:600px;width:1250px;" id="myPanelGrid" >
+        	<!-- <p:layout style="min-width:400px;min-height:400px;height:450px; width:400px;" id="layout">-->    			   
+    			<p:layoutUnit position="center" size="500" maxSize="650" id="layU1">
+    				<p:dataTable id="tbl_halls" var="hall" value="#{dataExporterView.halls}" selectionMode="single"
+    					selection="#{dataExporterView.selectedHall}" rowKey="#{hall.id}"
+                 		paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}     {Exporters}"
+                 		paginator="true" rows="10" style="margin-bottom:20px" >
+ 						
+				        <f:facet name="{Exporters}">
+				            <h:commandLink>
+						        <p:graphicImage value=".\..\..\img\excel.png" width="24"/>
+						        <p:dataExporter type="xls" target="tbl_halls" fileName="export"/>
+						    </h:commandLink>
+						 
+						    <h:commandLink>
+						        <p:graphicImage value=".\..\..\img\pdf.png" width="24" />
+						        <p:dataExporter type="pdf" target="tbl_halls" fileName="export"/>
+						    </h:commandLink>
+						 
+						    <h:commandLink>
+						        <p:graphicImage value=".\..\..\img\csv.png" width="24" />
+						        <p:dataExporter type="csv" target="tbl_halls" fileName="export"/>
+						    </h:commandLink>
+						 
+						    <h:commandLink>
+						        <p:graphicImage value=".\..\..\img\xml.png" width="24" />
+						        <p:dataExporter type="xml" target="tbl_halls" fileName="export"/>
+						    </h:commandLink>        
+				        </f:facet>
+				 
+				        <p:column>
+				            <f:facet name="header">
+				                <h:outputText value="Id" />
+				            </f:facet>
+				            <h:outputText value="#{hall.id}" />
+				        </p:column>
+				 
+				        <p:column>
+				            <f:facet name="header">
+				                <h:outputText value="Name"/>
+				            </f:facet>
+				            <h:outputText value="#{hall.name}" />
+				        </p:column>
+				 
+				        <p:column>
+				            <f:facet name="header">
+				                <h:outputText value="Floor" />
+				            </f:facet>
+				            <h:outputText value="#{hall.floor}" />
+				        </p:column>
+				 
+				        <p:column>
+				            <f:facet name="header">
+				                <h:outputText value="Capacity" />
+				            </f:facet>
+				            <h:outputText value="#{hall.capacity}" />
+				        </p:column>
+				    </p:dataTable>
+    			</p:layoutUnit>
+    			
+    			<p:layoutUnit position="west" resizable="true" size="320" minSize="320" maxSize="350" style="width:660px;">
+   				  	<p:accordionPanel>
+				        <p:tab title="Halls">
+				            <h:panelGrid columns="1">
+				            	<p:growl id="menu_messages_halls" showDetail="true"/>
+				            	<p:menu>						        	
+							        <p:menuitem value="List"   actionListener="#{dataExporterView.getAllHalls}" update=":form:tbl_halls menu_messages_halls"/>
+							        <p:menuitem value="Add"    update=":form1:displaySave" onclick="PF('eventDialogSave').show();"/>
+						            <p:menuitem value="Edit"   update=":form2:displayEdit" onclick="PF('eventDialogEdit').show();"/>
+						            <p:menuitem value="Delete" update=":form1:displayDel"  onclick="PF('eventDialogDel').show();"/>						            						            						            					            
+						        </p:menu>					        
+				            </h:panelGrid>
+				        </p:tab>				        
+				    </p:accordionPanel>
+    			</p:layoutUnit>
+    				
+		    </p:layout>	    
+		    
+        </h:form>
+        <h:form id="form1">
+      		<p:growl id="messages" showDetail="true"/>      		
+      		<p:dialog id="dialog_save" header="Add new hall" widgetVar="eventDialogSave" modal="true"
+          		resizable="false" width="400" showEffect="clip" hideEffect="fold" >
+
+	            <h:panelGrid id="displaySave" columns="2" cellpadding="4">
+	                <h:outputText value="Name:" />
+	                <p:inputText value="#{dataExporterView.newHall.name}" />
+	
+	                <h:outputText value="Capacity:" />
+	                <p:inputText value="#{dataExporterView.newHall.capacity}" />
+	
+	                <h:outputText value="Floor:" />
+	                <p:inputText value="#{dataExporterView.newHall.floor}" />
+	                
+	                <h:outputText value="Id:" />
+	                <p:inputText value="#{dataExporterView.newHall.id}" />
+	                
+	                <p:commandButton value="Exit" oncomplete="PF('eventDialogSave').hide();"/>
+					<p:commandButton id="insButton" value="Save" actionListener="#{dataExporterView.insert}" style="float:right;"  
+						update="messages" oncomplete="PF('eventDialogSave').hide();">						
+					</p:commandButton>					
+	            </h:panelGrid>
+	            <p:ajax event="close" listener="#{dataExporterView.getAllHalls}" update=":form:tbl_halls"/>
+	        </p:dialog>        
+	        
+	        
+      		<p:dialog id="dialog_del" header="Delete a hall" widgetVar="eventDialogDel" modal="true"
+          		resizable="false" width="400" showEffect="clip" hideEffect="fold" >
+
+	            <h:panelGrid id="displayDel" columns="2" cellpadding="4">
+	                <h:outputText value="Please, confirm deleting!" />
+	                <p:inputText value="#{dataExporterView.selectedHall.name}" />
+	
+	                <h:outputText value="Capacity:" />
+	                <p:inputText value="#{dataExporterView.selectedHall.capacity}" />
+	
+	                <h:outputText value="Floor:" />
+	                <p:inputText value="#{dataExporterView.selectedHall.floor}" />
+	                
+	                <h:outputText value="Id:" />
+	                <p:inputText value="#{dataExporterView.selectedHall.id}" />
+	                
+	                <p:commandButton value="Exit" oncomplete="PF('eventDialogDel').hide();"/>					
+					<p:commandButton id="remButton" value="Delete" actionListener="#{dataExporterView.delete}" style="float:right;" 
+						update="messages" oncomplete="PF('eventDialogDel').hide();">						
+					</p:commandButton>
+	            </h:panelGrid>
+	            <p:ajax event="close" listener="#{dataExporterView.getAllHalls}" update=":form:tbl_halls"/>
+	        </p:dialog>
+        </h:form>
+        
+        <h:form id="form2">
+        	<p:dialog id="dialog_edit" header="Edit hall" widgetVar="eventDialogEdit" modal="true"
+          		resizable="false" width="400" showEffect="clip" hideEffect="fold">
+
+	            <h:panelGrid id="displayEdit" columns="2" cellpadding="4">
+	                <h:outputText value="Name:" />
+	                <p:inputText value="#{dataExporterView.selectedHall.name}" />
+	
+	                <h:outputText value="Capacity" />
+	                <p:inputText value="#{dataExporterView.selectedHall.capacity}" />
+	
+	                <h:outputText value="Floor:" />
+	                <p:inputText value="#{dataExporterView.selectedHall.floor}" />
+	                
+	                <h:outputText value="Id:" />
+	                <p:inputText value="#{dataExporterView.selectedHall.id}" />
+	                
+	                <p:commandButton value="Exit" oncomplete="PF('eventDialogEdit').hide();"/>					
+					<p:commandButton id="updButton" value="Update" actionListener="#{dataExporterView.update}" style="float:right;"
+						update=":form:messages" oncomplete="PF('eventDialogEdit').hide();">						
+					</p:commandButton>
+	            </h:panelGrid>
+	            <p:ajax event="close" listener="#{dataExporterView.getAllHalls}" update=":form:tbl_halls"/>
+	        </p:dialog>
+        </h:form>
+    </h:body>    
+    <footer>
+    </footer>
+</html>

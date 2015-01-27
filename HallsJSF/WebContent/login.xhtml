@@ -1,0 +1,39 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+  	xmlns:p="http://primefaces.org/ui" >
+    <h:head>
+    	<title>LogIn Page</title>       
+        <link rel="icon"       type="image/png"	href="http://127.0.0.1:8080/HallsJSF/favicon.png" />
+        <link rel="stylesheet" type="text/css"  href="http://127.0.0.1:8080/HallsJSF/css/styles.css" />
+        <link rel="stylesheet" type="text/css"  href="http://127.0.0.1:8080/HallsJSF/css/hover.css" />
+        <script src="http://127.0.0.1:8080/HallsJSF/js/js_settings.js"></script>
+        <script>
+	       window.onload = function() {
+    			document.getElementById("j_username").focus();
+    		};
+       </script>
+    </h:head>
+    <h:body> 
+        <form id="formLogin" method="POST" action="j_security_check">    
+	        <p:panel styleClass="centered">
+	        	        		
+	            <h:panelGrid columns="2" style="margin-left:auto; margin-right:auto;">
+	                <h:outputText value="Username"></h:outputText>
+	                <p:panel styleClass="input-container">
+	                	<h:inputText id="j_username" name="j_username" value=""></h:inputText>
+	                </p:panel>
+	                <h:outputText value="Password"></h:outputText>
+	                <p:panel styleClass="input-container">
+	                	<h:inputSecret id="j_password" name="j_password" onkeypress="runEvent(event)" value=""></h:inputSecret>
+	                </p:panel>	                
+	                <h:outputText value=""></h:outputText>
+	                <h:outputText value=""></h:outputText>	                	            	
+	            </h:panelGrid>
+	            
+	            <h:commandButton styleClass="OkButton" value="Log In" action="login"></h:commandButton>				
+	            <a  href="http://127.0.0.1:8080/HallsJSF/register.xhtml" class="RegButton"> Sign In </a>            	            
+	        </p:panel>
+        </form>
+    </h:body>
+</html>

@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+  	xmlns:p="http://primefaces.org/ui"  >
+    <h:head>
+    	<meta charset="UTF-8"></meta> 
+        <title>REQUEST LIST</title>        
+        <link rel="icon"       type="image/png"	href="http://127.0.0.1:8080/HallsJSF/favicon.png" />
+        <link rel="stylesheet" type="text/css"  href="http://127.0.0.1:8080/HallsJSF/css/styles.css" />
+        <link rel="stylesheet" type="text/css"  href="http://127.0.0.1:8080/HallsJSF/css/hover.css" />
+        <script src="http://127.0.0.1:8080/HallsJSF/js/js_settings.js"></script>
+    </h:head>
+    <h:body> 
+    	<p:ajaxStatus style="display:block;margin-bottom:2em;position:fixed;top:10px;left:50%;">
+		    <f:facet name="start">
+		        <p:graphicImage value=".\..\img\723.GIF" />
+		    </f:facet>
+		    <f:facet name="success">
+		        <p:graphicImage value=".\..\img\723.GIF" />
+		    </f:facet>      
+		</p:ajaxStatus>   
+        <div class="nav">
+            <ul>
+              	<li class ="pulse">
+                    <a href=".\index_logged.xhtml">HOME</a>
+                </li>                
+                <li class ="pulse">
+                    <a href=".\admset\index_admin.xhtml">ADMIN PANEL</a>
+                </li>                
+                <li class ="pulse">
+                    <a href=".\schedule_logged.xhtml">SCHEDULE</a>
+            	</li>                
+                <li class ="pulse">
+	                <a href=".\request.xhtml">MAKE REQUESTS</a>
+                </li>
+                <li class ="pulse">
+	                <a href=".\requests_list.xhtml">REQUESTS</a>
+                </li>
+                <li class ="pulse">	            
+					<h:form>	                                	
+	            	  	<h:commandLink   value="Logout #{userLoginView.loggedUser}"  action="#{userLoginView.logout}"></h:commandLink>	                	
+					</h:form>                
+                </li>
+        	</ul>
+        </div>
+        
+		
+    	<h:form id="form">
+    		<p:growl id="messages" showDetail="true" />
+    		<p:remoteCommand autoRun="true" actionListener="#{requestViewer.getAllRequests}" update="messages myPanelGrid"/>    		    		
+    		<p:layout style="margin-left: auto; margin-right: auto; min-width:700; min-height:400px;height:600px;width:800px;" id="myPanelGrid" >
+    			<p:layoutUnit position="center" id="commands">
+			    	<h:panelGrid columnClasses="value" style="width:700px; margin-left:auto; margin-right:auto;">
+				        <h3>Hall requests</h3>
+				        <p:schedule id="schedule" editable="false" draggable="fasle" value="#{requestViewer.eventModel}" locale="bg_short" 
+				        	centerHeaderTemplate="title" widgetVar="myschedule" timeZone="GMT+2">
+				            <p:ajax event="eventSelect" listener="#{requestViewer.onEventSelectNoAdd}"  update=":form1:infoDlg" oncomplete="PF('eventDialog').show();"/>
+				        </p:schedule>				        
+			    	</h:panelGrid>			 		
+			    </p:layoutUnit>
+			</p:layout>    
+		</h:form>
+		
+		<h:form id="form1">
+	 		<p:growl id="messages" showDetail="true" />
+	    	<p:dialog widgetVar="eventDialog" header="Request's info" modal="true" showEffect="explode" hideEffect="clip" id="infoDlg">
+	        	<h:panelGrid id="eventDetails" columns="2">
+		            <h:outputLabel for="title1" value="Title:" />
+	            	<p:inputText style="width:300px;" id="title1" value="#{requestViewer.event.title}"/>
+	 
+		            <h:outputLabel for="from1" value="Start:" />
+	            	<p:inputMask style="width:300px;" id="from1" value="#{requestViewer.event.startDate}" mask="99-99-9999 99:99">
+		                <f:convertDateTime pattern="dd-MM-yyyy HH:mm" timeZone="GMT+2"/>
+	            	</p:inputMask>
+	
+	            	<h:outputLabel for="to1" value="End:" />            	
+	            	<p:inputMask style="width:300px;" id="to1" value="#{requestViewer.event.endDate}" mask="99-99-9999 99:99">
+		                <f:convertDateTime pattern="dd-MM-yyyy HH:mm" timeZone="GMT+2"/>
+	            	</p:inputMask>
+	            	
+	            	<p:inputText id="dummy" style="display:none;"></p:inputText>	  
+	            	<p:commandButton style="width:310px;" id="btnExit" value="Exit" oncomplete="PF('eventDialog').hide();" />	            	           	
+	        	</h:panelGrid>
+	    	</p:dialog>
+		</h:form>
+    </h:body>    
+    <footer>
+    </footer>
+</html>

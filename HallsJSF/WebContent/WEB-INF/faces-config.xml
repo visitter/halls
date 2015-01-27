@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<faces-config
+    xmlns="http://java.sun.com/xml/ns/javaee"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-facesconfig_2_0.xsd"
+    version="2.0">
+	<managed-bean>
+		<managed-bean-name>scheduleView</managed-bean-name>
+		<managed-bean-class>testb.ScheduleView</managed-bean-class>
+		<managed-bean-scope>view</managed-bean-scope>
+	</managed-bean>
+	<managed-bean>
+		<managed-bean-name>hall</managed-bean-name>
+		<managed-bean-class>testb.Hall</managed-bean-class>
+		<managed-bean-scope>session</managed-bean-scope>
+	</managed-bean>
+	<managed-bean>
+		<managed-bean-name>dataExporterView</managed-bean-name>
+		<managed-bean-class>testb.DataExporterView</managed-bean-class>
+		<managed-bean-scope>session</managed-bean-scope>
+	</managed-bean>
+	<managed-bean>
+		<managed-bean-name>nomsExporterView</managed-bean-name>
+		<managed-bean-class>testb.NomsExporterView</managed-bean-class>
+		<managed-bean-scope>session</managed-bean-scope>
+	</managed-bean>
+	<managed-bean>
+		<managed-bean-name>baseNomenclatureRow</managed-bean-name>
+		<managed-bean-class>testb.BaseNomenclatureRow</managed-bean-class>
+		<managed-bean-scope>session</managed-bean-scope>
+	</managed-bean>
+	<managed-bean>
+		<managed-bean-name>request</managed-bean-name>
+		<managed-bean-class>testb.Request</managed-bean-class>
+		<managed-bean-scope>session</managed-bean-scope>
+	</managed-bean>
+	<managed-bean>
+		<managed-bean-name>requestViewer</managed-bean-name>
+		<managed-bean-class>testb.RequestViewer</managed-bean-class>
+		<managed-bean-scope>view</managed-bean-scope>
+	</managed-bean>	
+	<application>
+	  	<message-bundle>
+	  		testb.HallsMessages
+	  	</message-bundle>
+    </application>
+
+</faces-config>

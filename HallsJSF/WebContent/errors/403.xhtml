@@ -1,0 +1,20 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html">
+    <h:head>
+        <title>Error 403</title>
+    </h:head>
+    <h:body>
+    
+	    <h2 style="text-align:center; margin-left: auto; margin-right: auto;" >You are not admin, please log in as admin</h2>    
+	    <br />
+	    <div style="text-align:center; margin-left: auto; margin-right: auto;">
+	    	
+	    	<h:form>
+	    		<h:link style="text-align:center; margin-left: auto; margin-right: auto;" outcome="./../logged/index_logged.xhtml" >Home</h:link>
+	    		<br/>	                                	
+	        	<h:commandLink   value="Logout #{userLoginView.loggedUser}"  action="#{userLoginView.logout}"></h:commandLink>	                	
+			</h:form> 
+	    </div>    
+
+    </h:body>
+</html>

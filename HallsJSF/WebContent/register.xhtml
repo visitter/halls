@@ -1,0 +1,48 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+  	xmlns:p="http://primefaces.org/ui" >
+    <h:head>    
+    	<title>Registration</title>
+        <link rel="icon"       type="image/png"	href="http://127.0.0.1:8080/HallsJSF/favicon.png" />
+        <link rel="stylesheet" type="text/css"  href="http://127.0.0.1:8080/HallsJSF/css/styles.css" />
+        <link rel="stylesheet" type="text/css"  href="http://127.0.0.1:8080/HallsJSF/css/hover.css" />
+        <script src="http://127.0.0.1:8080/HallsJSF/js/js_settings.js"></script>       
+    </h:head>
+    <h:body>
+        <h:form id="formReg">
+        	<p:growl id="messages" showDetail="true"/>
+        	
+	        <p:panel styleClass="centered" style="height:190px; margin-top:-95px; background:URL('http://127.0.0.1:8080/HallsJSF/img/login/reg_fon.png') no-repeat;">        		
+	            <h:panelGrid columns="2" style="margin-left:auto; margin-right:auto;">
+	                <h:outputText value="Username"></h:outputText>
+	                 <p:panel styleClass="input-container">	                 	
+	                	<h:inputText  id="username" value="#{registerUser.username}"></h:inputText>
+	                	<p:focus for="username"/>
+	                </p:panel>
+	                
+	                <h:outputText value="Password"></h:outputText>
+	                <p:panel styleClass="input-container">
+	                	<h:inputSecret id="password_1" value="#{registerUser.password1}"></h:inputSecret>
+	                </p:panel>	                
+	                
+	                <h:outputText value="Repeat password"></h:outputText>
+	                <p:panel styleClass="input-container">
+	                	<h:inputSecret id="password_2"  value="#{registerUser.password2}"></h:inputSecret>
+	                </p:panel>
+	                
+	                <h:outputText value="E-mail"></h:outputText>
+	                <p:panel styleClass="input-container">
+	                	<h:inputText id="mail"  value="#{registerUser.mail}"></h:inputText>
+	                </p:panel>
+	                
+
+	                <h:outputText value=""></h:outputText>
+	                <h:outputText value=""></h:outputText>	                	            	
+	            </h:panelGrid>	                   
+	            <h:commandLink styleClass="OkButton"  style="top:150px; text-align: center;text-decoration: none;" value="Home" action="index"></h:commandLink>
+	            <h:commandLink styleClass="RegButton" style="top:150px;" value="Sign In" actionListener="#{registerUser.register}" update="messages"></h:commandLink>	            	         
+	        </p:panel>
+        </h:form>
+    </h:body>
+</html>
