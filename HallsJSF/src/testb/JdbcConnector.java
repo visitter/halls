@@ -9,6 +9,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 
 public class JdbcConnector {
    
@@ -362,6 +364,48 @@ public class JdbcConnector {
 	   
    }
    
+   public HashMap<String, Integer> checkAvailableResources(Date start, Date end){
+	   try{
+		   String sql = String.format("SELECT REQ_EQ_TYPE_ID, NET.DESCRIPTION, Sum(REQ_EQ_COUNT), (EQ_COUNT_AVAILABLE-Sum(REQ_EQ_COUNT)) FROM MAIN_SCHEDULE AS MS "+		   
+				   						" INNER JOIN MAIN_MEETINGS AS MM "+ 
+				   						" ON MS.SCH_ME_ID = MM.ME_ID "+
+				   							" INNER JOIN MAIN_REQUESTS_EQUIPMENT AS MRQ "+ 
+				   							" ON MRQ.REQ_ID = MM.ME_REQ_ID "+
+				   								" INNER JOIN NOM_EQ_TYPES AS NET "+
+				   								" ON NET.ID = MRQ.REQ_EQ_TYPE_ID "+
+				   									" INNER JOIN MAIN_EQUIPMENT_INVENTORY AS MEI "+ 
+				   									" ON NET.ID = MEI.EQ_TYPE_ID "+
+				   						" WHERE MS.ME_START_DATE >= '%s' AND MS.ME_END_DATE<='%s' "+
+				   						" GROUP BY REQ_EQ_TYPE_ID, NET.DESCRIPTION, EQ_COUNT_AVAILABLE",
+				   format.format(start),
+				   format.format(end)
+				   );
+		   		
+		   ResultSet res = statementNom.executeQuery(sql);
+		   HashMap<String, Integer> map = new HashMap<String, Integer>();
+		   
+		   while( res.next() ){			   
+			   map.put(res.getString("DESCRIPTION"), res.getInt("4"));			   
+		   }
+		   		   
+		   
+		   if(map.isEmpty()){
+			   sql = "SELECT NET.DESCRIPTION, MEI.EQ_COUNT_AVAILABLE FROM MAIN_EQUIPMENT_INVENTORY AS MEI"
+			   			+ " INNER JOIN NOM_EQ_TYPES AS NET ON NET.ID = MEI.EQ_TYPE_ID";
+			   
+			   res = statementNom.executeQuery(sql);
+			   while( res.next() ){
+				   map.put(res.getString("DESCRIPTION"), res.getInt("EQ_COUNT_AVAILABLE"));
+			   }
+		   }
+		   return map; 
+	   } catch (SQLException e) {
+		   e.printStackTrace();
+		  
+	   }
+	   return null;	
+	   
+   }
    public Boolean insertMeeting( Meeting me, Schedule sch) throws SQLException{
 	   try{		   
 		   connection.setAutoCommit(false);
@@ -543,9 +587,9 @@ public class JdbcConnector {
 	   String sql;
 	   
 	   if(id>0){
-		  sql = String.format("SELECT NQT.ID, NQT.DESCRIPTION, MEI.EQ_COUNT_AVAILABLE FROM MAIN_EQUIPMENT_INVENTORY AS MEI INNER JOIN NOM_EQ_TYPES AS NQT ON NQT.ID = MEI.EQ_TYPE_ID WHERE NQT.ID = %d", id);	   
+		  sql = String.format("SELECT MEI.EQ_ID, MEI.EQ_TYPE_ID, NQT.DESCRIPTION, MEI.EQ_COUNT_AVAILABLE FROM MAIN_EQUIPMENT_INVENTORY AS MEI INNER JOIN NOM_EQ_TYPES AS NQT ON NQT.ID = MEI.EQ_TYPE_ID WHERE NQT.ID = %d", id);	   
 	   }else {
-		  sql = "SELECT NQT.ID, NQT.DESCRIPTION, MEI.EQ_COUNT_AVAILABLE FROM MAIN_EQUIPMENT_INVENTORY AS MEI INNER JOIN NOM_EQ_TYPES AS NQT ON NQT.ID = MEI.EQ_TYPE_ID";
+		  sql = "SELECT MEI.EQ_ID, MEI.EQ_TYPE_ID, NQT.DESCRIPTION, MEI.EQ_COUNT_AVAILABLE FROM MAIN_EQUIPMENT_INVENTORY AS MEI INNER JOIN NOM_EQ_TYPES AS NQT ON NQT.ID = MEI.EQ_TYPE_ID";
 	   }
 	  
 	   try {
@@ -555,8 +599,8 @@ public class JdbcConnector {
 		   
 		   while(res.next()){
 				arr.add( new Equipment(
-										res.getInt("ID"),
-									 	new BaseNomenclatureRow(res.getInt("ID"), res.getString("DESCRIPTION")),
+										res.getInt("EQ_ID"),
+									 	new BaseNomenclatureRow(res.getInt("EQ_TYPE_ID"), res.getString("DESCRIPTION")),
 										res.getInt("EQ_COUNT_AVAILABLE")
 									)		 
 						);
@@ -571,6 +615,77 @@ public class JdbcConnector {
 		   e.printStackTrace();
 		   return null;
 	   }
+   }
+   
+   public Boolean updateEquipment(Equipment eq){
+	   try {
+		   connection.setAutoCommit(false);
+		   String sql = String.format("UPDATE MAIN_EQUIPMENT_INVENTORY SET EQ_TYPE_ID = %d, EQ_COUNT_AVAILABLE = %d WHERE EQ_ID = %d",
+				   						eq.getRow().getId(),
+				   						eq.getCount(),
+				   						eq.getId()
+				   					);   
+		   int resA = statementNom.executeUpdate(sql);		   
+		   
+		    
+		   if( resA>0 ){
+			   connection.commit();			   
+		   } else {
+			   connection.rollback();
+		   }
+		   connection.setAutoCommit(true);
+		   return resA>0;
+	   } catch (SQLException e) {
+		   e.printStackTrace();		   
+	   }	
+	   return false; 
+   }
+   public Boolean insertEquipment(Equipment eq){
+	   try {
+		   connection.setAutoCommit(false);
+		   String sql = String.format("SELECT EQ_TYPE_ID FROM MAIN_EQUIPMENT_INVENTORY WHERE EQ_TYPE_ID=%d",eq.getRow().getId());
+		   ResultSet res=statementNom.executeQuery(sql);
+		   int resA = 0;
+		   if( !res.next()){			   
+			   sql = String.format("INSERT INTO MAIN_EQUIPMENT_INVENTORY (EQ_TYPE_ID, EQ_COUNT_AVAILABLE) VALUES (%d, %d)",
+				  						eq.getRow().getId(),
+				   						eq.getCount()
+				   					);   
+			   resA = statementNom.executeUpdate(sql);		   
+			   		    
+			   if( resA>0 ){
+				   connection.commit();			   
+			   } else {
+				   connection.rollback();
+			   }
+		   }
+		   connection.setAutoCommit(true);
+		   return resA>0;
+	   } catch (SQLException e) {
+		   e.printStackTrace();		   
+	   }
+	   return false; 
+   }
+   
+   public Boolean deleteEquipment(Equipment eq){
+	   try {
+		   connection.setAutoCommit(false);
+		   String sql = String.format("DELETE FROM MAIN_EQUIPMENT_INVENTORY WHERE EQ_ID = %d",
+				   						eq.getId()
+				   					);   
+		   int resA = statementNom.executeUpdate(sql);		   
+		   		    
+		   if( resA>0 ){
+			   connection.commit();			   
+		   } else {
+			   connection.rollback();
+		   }
+		   connection.setAutoCommit(true);
+		   return resA>0;
+	   } catch (SQLException e) {
+		   e.printStackTrace();		   
+	   }
+	   return false; 
    }
    
    public void close()

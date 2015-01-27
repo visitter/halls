@@ -7,11 +7,12 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
-
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 
@@ -26,7 +27,6 @@ import org.primefaces.model.ScheduleEvent;
 import org.primefaces.model.ScheduleModel;
 
 public class RequestViewer implements Serializable {
-  
 	private static final long serialVersionUID = 1L;
 	private int iterator = 0;
 	
@@ -106,6 +106,12 @@ public class RequestViewer implements Serializable {
 		this.meetingDesc = meetingDesc;
 	}
 	
+	public List<AvailableResources> hashMap;	
+	public List<AvailableResources> getHashMap() {
+		return hashMap;
+	}
+	
+	
 	@PostConstruct
     public void init() {		
     	System.out.println("init");    		
@@ -128,9 +134,10 @@ public class RequestViewer implements Serializable {
     	//eventModel.addEvent(event);
     	
     	halls = HallsManager.getAllHalls();
-    	hall = halls.get(0);    	
-    
+    	hall = halls.get(0);	
+    	
     	getAllMeetingTypes();
+    	checkAvailability();
     }
 	
 	
@@ -145,6 +152,7 @@ public class RequestViewer implements Serializable {
     	selectedRequest = (Request)event.getData();
     	System.out.println(selectedRequest.getId());
     	addElement();
+    	checkAvailability();
     }
 	public void onEventSelectNoAdd(SelectEvent selectEvent) {
         event = (ScheduleEvent) selectEvent.getObject();
@@ -228,16 +236,9 @@ public class RequestViewer implements Serializable {
 			setSelectedRequest(requests.get(0));    
 	}
 	
-	public void update(){
-		/*
-		System.out.println(selectedHall.getId());
-		manager.update(selectedHall);		
-		getAllHalls();
-		*/
-	}
-	
 	public void insert(){
 		System.out.println("Inserting...");
+		
 		try {
 			JdbcConnector oCon = new JdbcConnector();
 			Meeting me = new Meeting(0, meetingDesc, event.getTitle(), event.getStartDate(), event.getEndDate(), meetingType, selectedRequest.getId(), hallId);
@@ -261,12 +262,32 @@ public class RequestViewer implements Serializable {
 				
 	}
 	
-	public void delete(){
-		/*
-		System.out.println(selectedHall.getId());		
-		manager.delete(selectedHall);
-		getAllHalls();		
-		*/
+	public HashMap<String, Integer> checkAvailability(){
+
+		try {
+			JdbcConnector oCon = new JdbcConnector();
+			HashMap<String, Integer> hash = oCon.checkAvailableResources(event.getStartDate(), event.getEndDate());
+			
+			if(hashMap==null)
+				hashMap = new ArrayList<AvailableResources>();
+			else
+				hashMap.clear();
+			
+	    	for( Map.Entry<String, Integer> entry: hash.entrySet() ){
+	    		hashMap.add( new AvailableResources(entry.getKey(), entry.getValue()));
+	    	}
+			oCon.close();
+			return hash;
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
+		} catch (SQLException e) {
+			addMessage("Error in database",e.getMessage());
+			e.printStackTrace();
+			return null;
+		}
+	
 	}
 	
 	public void addMessage(String summary, String detail) {
@@ -347,6 +368,5 @@ public class RequestViewer implements Serializable {
 	public void getAllMeetingTypes(){
 		BaseNomManager man = new BaseNomManager();
 		meetingTypes = man.getAllNomRows("NOM_ME_TYPES");
-		
 	}
 }

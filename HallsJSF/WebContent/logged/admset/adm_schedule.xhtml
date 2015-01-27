@@ -62,11 +62,23 @@
 			    	<h:panelGrid columnClasses="value" style="width:400px;">
 				        <h3>Halls requests</h3>
 				        <p:schedule id="schedule" editable="true" draggable="true" value="#{requestViewer.eventModel}" locale="bg_short" centerHeaderTemplate="title" widgetVar="myschedule" timeZone="GMT+2">
-				            <p:ajax event="eventSelect" listener="#{requestViewer.onEventSelect}" update="myPanelGridInfo myPanelGrid2 :form1:infoDlg" />				            
+				            <p:ajax event="eventSelect" listener="#{requestViewer.onEventSelect}" update="myPanelGridInfo myPanelGrid2 :form1:infoDlg availableRes" />				            
 				            <p:ajax event="eventMove"   listener="#{requestViewer.onEventMove}"   update="myPanelGridInfo myPanelGrid2 :form1:infoDlg" />		            
 		            		<p:ajax event="eventResize" listener="#{requestViewer.onEventResize}" update="myPanelGridInfo myPanelGrid2 :form1:infoDlg" />
 				        </p:schedule>				        
-			    	</h:panelGrid>			 		
+			    	</h:panelGrid>			
+			    	<h:panelGrid>
+			    	
+			    	<p:dataTable value="#{requestViewer.hashMap}" var="myEntry" id="availableRes">
+						<p:column headerText="Key">
+					        <h:outputText value=" #{myEntry.name}" />
+					    </p:column>
+					 
+					    <p:column headerText="Value">
+					        <h:outputText value="#{myEntry.count}" />
+					    </p:column>
+					</p:dataTable>
+			    	</h:panelGrid> 		
 			    </p:layoutUnit>
 			    
 			    <p:layoutUnit position="center" style="width:660px;" id="myPanelGrid1">

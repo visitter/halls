@@ -57,7 +57,7 @@
         	<p:growl id="messages" showDetail="true"/>
         	
 			<p:layout style="margin-left: auto; margin-right: auto; min-width:970px; min-height:400px;height:600px;width:1250px;" id="myPanelGrid" >
-    			<p:layoutUnit position="center" size="500" maxSize="650" id="layoutUI">
+    			<p:layoutUnit position="center" size="500" maxSize="650" id="layUI">
     				<p:dataTable id="tbl_inventory" var="equipment" value="#{equipmentManager.arrEq}" selectionMode="single"
     					selection="#{equipmentManager.selectedEq}" rowKey="#{equipment.id}"    					
                  		paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}     {Exporters}"
@@ -114,7 +114,7 @@
 				            <h:panelGrid columns="1">
 				            	<p:growl id="menu_messages_eq" showDetail="true"/>				            	
 				            	<p:menu>
-							        <p:menuitem value="Add"    update=":form1:displaySave" onclick="PF('eventDialogSave').show();" disabled="false"/>
+							        <p:menuitem value="Add"    update=":form3:displaySave" onclick="PF('eventDialogSave').show();" disabled="false"/>
 						            <p:menuitem value="Edit"   update=":form2:displayEdit" onclick="PF('eventDialogEdit').show();" disabled="false"/>
 						            <p:menuitem value="Delete" update=":form1:displayDel"  onclick="PF('eventDialogDel').show();"  disabled="false"/>						            						            						            					            
 						        </p:menu>					        
@@ -125,46 +125,49 @@
 		    </p:layout>		    
         </h:form>
         
-		 <h:form id="form1">
-      		<p:growl id="messages" showDetail="true"/>      		
-      		<p:dialog id="dialog_save" header="Add new row" widgetVar="eventDialogSave" modal="true"
+		 <h:form id="form3">
+		 	<p:dialog id="dialog_save" header="Add new row" widgetVar="eventDialogSave" modal="true"
           		resizable="false" width="400" showEffect="clip" hideEffect="fold" >
-
 	            <h:panelGrid id="displaySave" columns="2" cellpadding="4">
 	                <h:outputText value="Description" />
-	                <p:inputText value="#{equipmentManager.selectedEq.row.desc}" disabled="true"/>
+	                <p:selectOneMenu id="eqTypes" value="#{equipmentManager.selectedId}" effect="fade" style="width:200px;" >
+						<p:ajax  listener="#{equipmentManager.getSelectedEq}"></p:ajax>
+					    <f:selectItems value="#{equipmentManager.arrEqTypes}" var="c" itemLabel="#{c.desc}" itemValue="#{c.id}" />				            
+					</p:selectOneMenu>
 	                
 	                <h:outputText value="Count" />
 	                <p:inputText value="#{equipmentManager.selectedEq.count}" />
 
 	                <h:outputText value="Id:" />
-	                <p:inputText value="#{equipmentManager.selectedEq.id}" />
+	                <p:inputText value="#{equipmentManager.selectedEq.id}" disabled="true"/>
 	                
 	                <p:commandButton value="Exit" oncomplete="PF('eventDialogSave').hide();"/>
 					<p:commandButton id="insButton" value="Save" actionListener="#{equipmentManager.insert}" style="float:right;"
-						update="messages" oncomplete="PF('eventDialogSave').hide();">						
+						update=":form:messages" oncomplete="PF('eventDialogSave').hide();">						
 					</p:commandButton>					
 	            </h:panelGrid>
 	            <p:ajax event="close" listener="#{equipmentManager.getAllEquipment}" update=":form:tbl_inventory"/>
 	        </p:dialog>        
-	        
-	        
+		 
+		 </h:form>
+		 
+		 <h:form id="form1">
       		<p:dialog id="dialog_del" header="Delete a row" widgetVar="eventDialogDel" modal="true"
           		resizable="false" width="400" showEffect="clip" hideEffect="fold" >
 
 	            <h:panelGrid id="displayDel" columns="2" cellpadding="4">
 	                <h:outputText value="Description" />
-	                <p:inputText value="#{equipmentManager.selectedEq.row.desc}" disabled="true"/>
+	                <p:inputText value="#{equipmentManager.selectedEq.row.desc}"/>
 	                
 	                <h:outputText value="Count" />
 	                <p:inputText value="#{equipmentManager.selectedEq.count}" />
 
 	                <h:outputText value="Id:" />
-	                <p:inputText value="#{equipmentManager.selectedEq.id}" />
+	                <p:inputText value="#{equipmentManager.selectedEq.id}" disabled="true" />
 	                
 	                <p:commandButton value="Exit" oncomplete="PF('eventDialogDel').hide();"/>					
 					<p:commandButton id="remButton" value="Delete" actionListener="#{equipmentManager.delete}" style="float:right;"
-						update="messages" oncomplete="PF('eventDialogDel').hide();">						
+						update=":form:messages" oncomplete="PF('eventDialogDel').hide();">						
 					</p:commandButton>
 	            </h:panelGrid>
 	            <p:ajax event="close" listener="#{equipmentManager.getAllEquipment}" update=":form:tbl_inventory"/>
@@ -177,13 +180,13 @@
 
 	            <h:panelGrid id="displayEdit" columns="2" cellpadding="4">
 	                <h:outputText value="Description" />
-	                <p:inputText value="#{equipmentManager.selectedEq.row.desc}" disabled="true"/>
+	                <p:inputText value="#{equipmentManager.selectedEq.row.desc}"/>
 	                
 	                <h:outputText value="Count" />
 	                <p:inputText value="#{equipmentManager.selectedEq.count}" />
 
 	                <h:outputText value="Id:" />
-	                <p:inputText value="#{equipmentManager.selectedEq.id}" />
+	                <p:inputText value="#{equipmentManager.selectedEq.id}" disabled="true"/>
 	                
 	                <p:commandButton value="Exit" oncomplete="PF('eventDialogEdit').hide();"/>					
 					<p:commandButton id="updButton" value="Update" actionListener="#{equipmentManager.update}" style="float:right;"
