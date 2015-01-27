@@ -30,10 +30,11 @@ public class UserLoginView implements Serializable{
         this.password = password;
     }
     
-    private String isAdmin;
-    public String getIsAdmin() {
+    private Boolean isAdmin;
+    public Boolean getIsAdmin() {
 		return isAdmin;
 	}
+    
 
 	@PostConstruct
     public void init(){
@@ -51,7 +52,7 @@ public class UserLoginView implements Serializable{
     	System.out.println("logged user = "+FacesContext.getCurrentInstance().getExternalContext().getRemoteUser());
     	setUsername( FacesContext.getCurrentInstance().getExternalContext().getRemoteUser() );
     	if(username!=null)
-    		isAdmin = ((Boolean)username.equalsIgnoreCase("admin")).toString(); 
+    		isAdmin = username.equalsIgnoreCase("admin"); 
     	return FacesContext.getCurrentInstance().getExternalContext().getRemoteUser();
     }
 }

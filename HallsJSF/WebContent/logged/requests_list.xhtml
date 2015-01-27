@@ -27,8 +27,10 @@
                     <a href=".\index_logged.xhtml">HOME</a>
                 </li>                
                 <li class ="pulse">
-                    <a href=".\admset\index_admin.xhtml">ADMIN PANEL</a>
-                </li>                
+                	<h:form styleClass="#{userLoginView.isAdmin ? 'show' : 'hide'}">
+                    	<a href=".\admset\index_admin.xhtml">ADMIN PANEL</a>
+                    </h:form>
+                </li>            
                 <li class ="pulse">
                     <a href=".\schedule_logged.xhtml">SCHEDULE</a>
             	</li>                

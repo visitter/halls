@@ -38,6 +38,8 @@ public class JdbcConnector {
    //noms
    private Statement statementNom    = null;  
    private SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+   private SimpleDateFormat formatHour0 = new SimpleDateFormat("yyyy-MM-dd 00:00:00");
+   private SimpleDateFormat formatHour23 = new SimpleDateFormat("yyyy-MM-dd 23:59:59");
    
    private ResultSet executeSelect(String sqlString){
 	   if( ( sqlString == null )||( sqlString.isEmpty() ) )
@@ -377,8 +379,8 @@ public class JdbcConnector {
 				   									" ON NET.ID = MEI.EQ_TYPE_ID "+
 				   						" WHERE MS.ME_START_DATE >= '%s' AND MS.ME_END_DATE<='%s' "+
 				   						" GROUP BY REQ_EQ_TYPE_ID, NET.DESCRIPTION, EQ_COUNT_AVAILABLE",
-				   format.format(start),
-				   format.format(end)
+				   formatHour0.format(start),
+				   formatHour23.format(end)
 				   );
 		   		
 		   ResultSet res = statementNom.executeQuery(sql);

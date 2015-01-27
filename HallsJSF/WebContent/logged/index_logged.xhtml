@@ -4,22 +4,24 @@
     xmlns:f="http://java.sun.com/jsf/core"
     xmlns:h="http://java.sun.com/jsf/html"
   	xmlns:p="http://primefaces.org/ui" >
-    <head>
+    <h:head>
         <meta charset="UTF-8"></meta>
         <title>HOME</title>
         <link rel="icon"       type="image/png"	href="http://127.0.0.1:8080/HallsJSF/favicon.png" />
         <link rel="stylesheet" type="text/css"  href="http://127.0.0.1:8080/HallsJSF/css/styles.css" />
         <link rel="stylesheet" type="text/css"  href="http://127.0.0.1:8080/HallsJSF/css/hover.css" />
         <script src="http://127.0.0.1:8080/HallsJSF/js/js_settings.js"></script>
-    </head>
+    </h:head>
     <body>            
         <div class="nav">
             <ul>
-              	<li class ="pulse">
+              	<li class ="pulse">              		
                     <a href=".\index_logged.xhtml">HOME</a>
                 </li>                
                 <li class ="pulse">
-                    <a href=".\admset\index_admin.xhtml">ADMIN PANEL</a>
+                	<h:form styleClass="#{userLoginView.isAdmin ? 'show' : 'hide'}" >
+                    	<a href=".\admset\index_admin.xhtml">ADMIN PANEL</a>
+                    </h:form>
                 </li>                
                 <li class ="pulse">
                     <a href=".\schedule_logged.xhtml">SCHEDULE</a>
