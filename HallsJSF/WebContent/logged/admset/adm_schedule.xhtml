@@ -6,7 +6,7 @@
   	xmlns:p="http://primefaces.org/ui"  >
     <h:head>
     	<meta charset="UTF-8"></meta> 
-        <title>REQUESTS</title>        
+        <title>REQUEST LIST</title>        
         <link rel="icon"       type="image/png"	href="http://127.0.0.1:8080/HallsJSF/favicon.png" />
         <link rel="stylesheet" type="text/css"  href="http://127.0.0.1:8080/HallsJSF/css/styles.css" />
         <link rel="stylesheet" type="text/css"  href="http://127.0.0.1:8080/HallsJSF/css/hover.css" />
@@ -67,57 +67,57 @@
 				            <p:ajax event="eventMove"   listener="#{requestViewer.onEventMove}"   update="myPanelGridInfo myPanelGrid2 :form1:infoDlg" />		            
 		            		<p:ajax event="eventResize" listener="#{requestViewer.onEventResize}" update="myPanelGridInfo myPanelGrid2 :form1:infoDlg" />
 				        </p:schedule>				        
-			    	</h:panelGrid>			
-			    	<h:panelGrid>
-			    	
-			    	<p:dataTable value="#{requestViewer.hashMap}" var="myEntry" id="availableRes">
-						<p:column headerText="Resource">
-					        <h:outputText value=" #{myEntry.name}" />
-					    </p:column>
-					 
-					    <p:column headerText="Available">
-					        <h:outputText value="#{myEntry.count}" />
-					    </p:column>
-					</p:dataTable>
-			    	</h:panelGrid> 		
-			    </p:layoutUnit>
-			    
-			    <p:layoutUnit position="center" style="width:660px;" id="myPanelGrid1">
-			    	<p:panel id="myPanelGridInfo" style="width:98%; height:10%;">
-			    	 	<h:outputLabel for="title" value="Name(Desc):" />
-			            <p:inputText id="title" style="width:100px" value="#{requestViewer.event.title}" update=":form1:infoDlg"/>
-			 
-				        <h:outputLabel for="from" style="width:100px" value=" Start:" />
+			    	</h:panelGrid>
+			    </p:layoutUnit>			
+			       
+			    <p:layoutUnit position="center" style="width:680px;" id="myPanelGrid1">
+			    	<h:panelGrid columns="4" id="myPanelGridInfo" style="width:98%; height:20%;">
+			    	 	<h:outputLabel for="title" value="Name:" />
+			            <p:inputText id="title" style="width:190px;" value="#{requestViewer.event.title}" update=":form1:infoDlg"/>
+			            
+			 			<p:outputLabel for="description" value="Desc: "></p:outputLabel>
+					    <p:inputText id="description" value="#{requestViewer.meetingDesc}" style="width:190px;"></p:inputText>
+			 			
+				        <h:outputLabel for="from" value="Start:" />
 				        <p:calendar id="from" value="#{requestViewer.event.startDate}" navigator="true" mask="true" pattern="dd-MM-yyyy HH:mm" update=":form1:infoDlg"/>
 			            			
-			            <h:outputLabel for="to" style="width:100px" value=" End:" />
+			            <h:outputLabel for="to" value="End:" />
 			            <p:calendar id="to" value="#{requestViewer.event.endDate}" navigator="true" mask="true" pattern="dd-MM-yyyy HH:mm" update=":form1:infoDlg"/>			            
+			    	</h:panelGrid>
+			    	
+			    	<p:panel id="myPanelGrid2" style="position:relative; width:98%; height:58%;">
 			    	</p:panel>
 			    	
-			    	<p:panel id="myPanelGrid2" style="position:relative; width:98%; height:65%;">
-			    	</p:panel>
-			    	
-			    	<p:panel id="myPanelGridComm" style="width:98%; height:20%;">
+			    	<p:panel id="myPanelGridComm" style="width:98%; height:18%;">
 			    		<h:panelGrid columns="4" cellpadding="5">			    		
 							<p:outputLabel for="somHalls" value="Hall: "></p:outputLabel>
-							<p:selectOneMenu id="somHalls" value="#{requestViewer.hallId}" effect="fade" style="width:100%;" >
+							<p:selectOneMenu id="somHalls" value="#{requestViewer.hallId}" effect="fade" style="width:180px;" >
 					            <p:ajax  listener="#{requestViewer.getSelectedHall}"></p:ajax>
 					            <f:selectItems value="#{requestViewer.halls}" var="c" itemLabel="#{c.capacity} #{c.name}" itemValue="#{c.id}" />				            
 					        </p:selectOneMenu>
 					        
 					        <p:outputLabel for="somCType" value="Type: "></p:outputLabel>
-					        <p:selectOneMenu id="somCType" value="#{requestViewer.meetingType}" effect="fade" style="width:100%;" >
+					        <p:selectOneMenu id="somCType" value="#{requestViewer.meetingType}" effect="fade" style="width:180px;" >
 					            <p:ajax  listener="#{requestViewer.getSelectedHall}"></p:ajax>
 					            <f:selectItems value="#{requestViewer.meetingTypes}" var="c" itemLabel="#{c.desc}" itemValue="#{c.id}" />				            
 					        </p:selectOneMenu>
-					        
-					        <p:outputLabel for="description" value="Desc: "></p:outputLabel>
-					        <p:inputText id="description" value="#{requestViewer.meetingDesc}" style="width:100%;"></p:inputText>
 					        
 					        <p:outputLabel for="makeMeeting" value=" "></p:outputLabel>					        		
 							<p:commandButton id="makeMeeting" value="Create meeting" update=":form1:infoDlg" oncomplete="PF('eventDialog').show();" style="width:100%;" />
 			    		</h:panelGrid>
 			    	</p:panel>
+			    </p:layoutUnit>
+			    <p:layoutUnit position="east">
+			    	<h:panelGrid style="width:220px;margin-left:auto;margin-right:10px;">
+				    	<p:dataTable value="#{requestViewer.hashMap}" var="myEntry" id="availableRes">
+							<p:column headerText="Resource">
+						        <h:outputText value=" #{myEntry.name}" />
+						    </p:column>					 
+						    <p:column headerText="Available">
+						        <h:outputText value="#{myEntry.count}" />
+						    </p:column>
+						</p:dataTable>
+			    	</h:panelGrid>
 			    </p:layoutUnit>
 		    </p:layout>    
 		</h:form>

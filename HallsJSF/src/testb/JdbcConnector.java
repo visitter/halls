@@ -314,10 +314,14 @@ public class JdbcConnector {
 	   }
 	   return false;	   
    }
-   public ArrayList<Request> getAllRequests(){
+   public ArrayList<Request> getAllRequests(Boolean isService){
 	   ResultSet resultSet= null;
 	   try {
-		   String sql = "SELECT REQ_ID, REQ_NAME, REQ_CU_ID, REQ_START_DATE, REQ_END_DATE FROM MAIN_REQUESTS";
+		   String sql = "";
+		   if( isService )
+			   sql = "SELECT REQ_ID, REQ_NAME, REQ_CU_ID, REQ_START_DATE, REQ_END_DATE FROM MAIN_REQUESTS WHERE REQ_ID < 3";
+		   else
+			   sql = "SELECT REQ_ID, REQ_NAME, REQ_CU_ID, REQ_START_DATE, REQ_END_DATE FROM MAIN_REQUESTS";
 				   
 		   resultSet = statementNom.executeQuery(sql);
 		   
@@ -354,21 +358,28 @@ public class JdbcConnector {
 								);
 				   }
 				   req.setReq(reqs);
-			   }
-			   
+			   }			   
 			   return arr;
 		   }
 	   } catch (SQLException e) {
-		   // TODO Auto-generated catch block
 		   e.printStackTrace();
 	   }
-	   return null; 
-	   
+	   return null;
    }
    
    public HashMap<String, Integer> checkAvailableResources(Date start, Date end){
 	   try{
-		   String sql = String.format("SELECT REQ_EQ_TYPE_ID, NET.DESCRIPTION, Sum(REQ_EQ_COUNT), (EQ_COUNT_AVAILABLE-Sum(REQ_EQ_COUNT)) FROM MAIN_SCHEDULE AS MS "+		   
+		   String sql = "SELECT NET.DESCRIPTION, MEI.EQ_COUNT_AVAILABLE FROM MAIN_EQUIPMENT_INVENTORY AS MEI"
+		   			+ " INNER JOIN NOM_EQ_TYPES AS NET ON NET.ID = MEI.EQ_TYPE_ID";
+		   
+		   ResultSet res = statementNom.executeQuery(sql);
+		   HashMap<String, Integer> map = new HashMap<String, Integer>();
+		   
+		   while( res.next() ){
+			   map.put(res.getString("DESCRIPTION"), res.getInt("EQ_COUNT_AVAILABLE"));
+		   }
+		   
+		   sql = String.format("SELECT REQ_EQ_TYPE_ID, NET.DESCRIPTION, Sum(REQ_EQ_COUNT), (EQ_COUNT_AVAILABLE-Sum(REQ_EQ_COUNT)) FROM MAIN_SCHEDULE AS MS "+		   
 				   						" INNER JOIN MAIN_MEETINGS AS MM "+ 
 				   						" ON MS.SCH_ME_ID = MM.ME_ID "+
 				   							" INNER JOIN MAIN_REQUESTS_EQUIPMENT AS MRQ "+ 
@@ -383,30 +394,17 @@ public class JdbcConnector {
 				   formatHour23.format(end)
 				   );
 		   		
-		   ResultSet res = statementNom.executeQuery(sql);
-		   HashMap<String, Integer> map = new HashMap<String, Integer>();
-		   
+		   res = statementNom.executeQuery(sql);
+		   		   
 		   while( res.next() ){			   
 			   map.put(res.getString("DESCRIPTION"), res.getInt("4"));			   
-		   }
-		   		   
-		   
-		   if(map.isEmpty()){
-			   sql = "SELECT NET.DESCRIPTION, MEI.EQ_COUNT_AVAILABLE FROM MAIN_EQUIPMENT_INVENTORY AS MEI"
-			   			+ " INNER JOIN NOM_EQ_TYPES AS NET ON NET.ID = MEI.EQ_TYPE_ID";
-			   
-			   res = statementNom.executeQuery(sql);
-			   while( res.next() ){
-				   map.put(res.getString("DESCRIPTION"), res.getInt("EQ_COUNT_AVAILABLE"));
-			   }
 		   }
 		   return map; 
 	   } catch (SQLException e) {
 		   e.printStackTrace();
 		  
 	   }
-	   return null;	
-	   
+	   return null;
    }
    public Boolean insertMeeting( Meeting me, Schedule sch) throws SQLException{
 	   try{		   

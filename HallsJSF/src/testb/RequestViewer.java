@@ -137,7 +137,8 @@ public class RequestViewer implements Serializable {
     	hall = halls.get(0);	
     	
     	getAllMeetingTypes();
-    	checkAvailability();
+    	
+        //checkAvailability();
     }
 	
 	
@@ -193,12 +194,13 @@ public class RequestViewer implements Serializable {
     }
     public void getAllRequestsAdmin(){
     	getAllRequests(true);
+    	checkAvailability();
     }
     public void getAllRequests(Boolean addEl){    	
     	JdbcConnector oCon;
 		try {
 			oCon = new JdbcConnector();				
-			requests = oCon.getAllRequests();
+			requests = oCon.getAllRequests(false);
 			oCon.close();
 			if( (requests!=null)&&(requests.size()>0)){
 				for( Request req : requests){

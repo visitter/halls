@@ -18,7 +18,6 @@ import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 
-
 import org.primefaces.component.dnd.Draggable;
 import org.primefaces.component.graphicimage.GraphicImage;
 import org.primefaces.component.menuitem.UIMenuItem;
@@ -86,7 +85,20 @@ public class Seats implements Serializable{
 		this.endDate = endDate;
 	}
 	
+	private Integer readyReq;
+	public Integer getReadyReq() {		
+		return readyReq;
+	}
+	public void setReadyReq(Integer readyReq) {
+		this.readyReq = readyReq;
+	}
+
 	
+	private ArrayList<Request> requestsList = null;
+	public ArrayList<Request> getRequestsList() {
+		return requestsList;
+	}
+
 	private Request request = new Request();	
 	public Request getRequest() {
 		return request;
@@ -128,8 +140,10 @@ public class Seats implements Serializable{
 		minDate = cal.getTime();
 		startDate =  cal.getTime();
 		endDate =  cal.getTime();
+		getAllRequests();
 		
-	}
+	}	
+	
 	public void addElement(ActionEvent event) {
 		UIMenuItem mi = (UIMenuItem)event.getComponent();		
 		
@@ -186,7 +200,8 @@ public class Seats implements Serializable{
 						 findComponent("form").
 						 	findComponent("myPanelGrid").
 						 		findComponent("myPanelGrid1").
-						 			findComponent(event.getDragId());
+						 			findComponent("myPanelGrid2").
+						 				findComponent(event.getDragId());
 		
 		GraphicImage gr =(GraphicImage) ui;
 		Point p = convertCoordinates();
@@ -253,7 +268,7 @@ public class Seats implements Serializable{
 		return true;//hmItemsCount.size()>0;
 	}
 	
-	public void insert(){
+	public void insert(){		
 		if( countItems() )
 		{			
 			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -297,13 +312,125 @@ public class Seats implements Serializable{
 			} catch (SQLException e) {
 				e.printStackTrace();
 				addMessage("Error in database",e.getMessage());
-			}		
-				
+			}	
 		}
 	}
 
 	public void addMessage(String summary, String detail) {
 		FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, summary, detail);
 		FacesContext.getCurrentInstance().addMessage(null, message);
+	}
+	
+	public void setReadyReq(){
+		switch(getReadyReq()){
+			case 1:
+				{break;}
+			case 2:
+				{break;}
+			case 3:
+				{break;}
+			default:
+			{}		
+		}
+	}
+	
+	public void addElements() {
+		UIComponent component=null;
+		try{
+			component = FacesContext.getCurrentInstance().getViewRoot().
+				findComponent("form").
+					findComponent("myPanelGrid").
+						findComponent("myPanelGrid1").
+							findComponent("myPanelGrid2");
+		}catch(NullPointerException npe){
+			npe.printStackTrace();
+		}
+
+		if( component!=null )
+			component.getChildren().clear();
+		
+		//iterator=0;
+		equipment.clear();
+		if( request!=null)
+		{
+			if( (request.getReq()!=null)&&(request.getReq().size()>0) )
+			{					
+				for( Requirements req:request.getReq()){
+					String[] arrP = req.getPositions().split(";");
+					ArrayList<Point> points = null; 
+					if( arrP.length>0 ){
+						points = new ArrayList<Point>();
+						for(String strP:arrP){
+							points.add(convertCoordinates(strP));
+						}
+					}
+					
+					for( int i = 0;i<req.getCount();i++){
+						GraphicImage p = new GraphicImage();
+				    	p.setId("test"+iterator );
+				    	p.setAlt("eq"+ req.getTypeId().toString());
+				    	String tmp = String.format("http://127.0.0.1:8080/HallsJSF/img/equip/eq%s.png",req.getTypeId().toString());
+				    	p.setValue(tmp);
+				    	if( (points!=null)&&(points.size()>0))
+				    		p.setStyle(String.format("position:absolute;top:%dpx;left:%dpx;", points.get(i).y, points.get(i).x));
+				    	else
+				    		p.setStyle(String.format("position:absolute;top:%dpx;left:%dpx;", 10, 10));
+		
+				    	p.setOnmouseup("setItemId(this.id)");
+				    	p.setOndblclick("removeItem(this)");				    	
+				    	
+				    	Draggable drag = new Draggable();	    	
+				    	drag.setFor("test"+iterator++);
+				    	drag.setId("test"+iterator++);
+				    	drag.setZindex(1000);
+		
+				    	component.getChildren().add(p);
+				    	component.getChildren().add(drag);
+				    	
+				    	EqItem eq = new EqItem("form:"+p.getId(), p.getAlt(), new Point(points.get(i).x, points.get(i).y));
+						equipment.add(eq);
+					}
+				}
+			}
+		}
+	}
+	public Point convertCoordinates(String coord){		
+		String arr[] = coord.split(",");
+		if(arr.length>1){			
+			return new Point(Integer.parseInt(arr[1]), Integer.parseInt(arr[0]));
+		}else
+			return new Point(0, 0);		
+	}
+	
+	
+	public void getAllRequests(){    	
+    	JdbcConnector oCon;
+		try {
+			oCon = new JdbcConnector();
+			requestsList = new ArrayList<Request>();
+			requestsList.add( new Request(0, "", "Custom", "", ""));
+			ArrayList<Request> arr = oCon.getAllRequests(true);
+			if(arr!=null)
+				requestsList.addAll(arr);
+			oCon.close();
+			setReadyReq(0);			
+							
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();			
+		} catch (SQLException e){
+			e.printStackTrace();
+			addMessage("Error in database",e.getMessage());
+		}
+		if( (requestsList!=null)&&(requestsList.size()>0))
+			setRequest(requestsList.get(0));    
+	}
+	
+	public void setPositions(){
+		if( readyReq>-1){
+			setRequest( requestsList.get(readyReq) );
+			System.out.println("request "+request.getId());
+			addElements();
+		}
+		System.out.println("readyReq "+ readyReq);
 	}
 }

@@ -3,12 +3,12 @@ package testb;
 import java.io.Serializable;
 
 import javax.annotation.PostConstruct;
-import javax.faces.bean.ApplicationScoped;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
  
 @ManagedBean
-@ApplicationScoped
+@SessionScoped
 public class UserLoginView implements Serializable{
 	private static final long serialVersionUID = 1L;
 	private String username;     
@@ -35,10 +35,19 @@ public class UserLoginView implements Serializable{
 		return isAdmin;
 	}
     
+    private String display;
+	public String getDisplay() {
+		return display;
+	}
 
 	@PostConstruct
     public void init(){
     	getLoggedUser();
+    	if(isAdmin){
+    		display = "block;";
+    	}else{
+    		display = "none;";
+    	}
     }
        
     public String logout() {
