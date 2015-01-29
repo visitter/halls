@@ -1,3 +1,7 @@
+// TODO: 
+/*
+ check all deleting if there is an active meeting
+ */
 package testb;
 
 import java.sql.Connection;
@@ -18,13 +22,6 @@ public class JdbcConnector {
    public static final String MyDB  = "jdbc:derby://localhost:1527/C:\\Program Files (x86)\\Apache-Tomcat-7\\Derby SQL\\databases\\MyDB";   
    private String dbConn = MyDB;
    
-   //requests
-   /*
-   private PreparedStatement selectRequest   = null;
-   private Statement insertRequest   = null;
-   private Statement insertRequestEQ = null;
-   private PreparedStatement deleteRequestEQ = null;
-   */
    //meetings
    private PreparedStatement selectSchMeeting = null;
    private PreparedStatement updateSchMeeting = null;
@@ -378,7 +375,7 @@ public class JdbcConnector {
 		   while( res.next() ){
 			   map.put(res.getString("DESCRIPTION"), res.getInt("EQ_COUNT_AVAILABLE"));
 		   }
-		   
+		   /*
 		   sql = String.format("SELECT REQ_EQ_TYPE_ID, NET.DESCRIPTION, Sum(REQ_EQ_COUNT), (EQ_COUNT_AVAILABLE-Sum(REQ_EQ_COUNT)) FROM MAIN_SCHEDULE AS MS "+		   
 				   						" INNER JOIN MAIN_MEETINGS AS MM "+ 
 				   						" ON MS.SCH_ME_ID = MM.ME_ID "+
@@ -393,11 +390,28 @@ public class JdbcConnector {
 				   formatHour0.format(start),
 				   formatHour23.format(end)
 				   );
-		   		
+		   */	
+		   
+		   sql = String.format( " SELECT REQ_EQ_TYPE_ID, NET.DESCRIPTION, (REQ_EQ_COUNT) AS OCCUPIED, "+
+				   				" (EQ_COUNT_AVAILABLE) AS AVAILABLE FROM MAIN_SCHEDULE AS MS "+	   
+				   					" INNER JOIN MAIN_MEETINGS AS MM "+ 
+				   					" ON MS.SCH_ME_ID = MM.ME_ID "+ 
+				   						" INNER JOIN MAIN_REQUESTS_EQUIPMENT AS MRQ "+  
+				   						" ON MRQ.REQ_ID = MM.ME_REQ_ID "+ 
+				   							" INNER JOIN NOM_EQ_TYPES AS NET "+ 
+				   							" ON NET.ID = MRQ.REQ_EQ_TYPE_ID "+ 
+				   								" INNER JOIN MAIN_EQUIPMENT_INVENTORY AS MEI "+ 
+				   								" ON NET.ID = MEI.EQ_TYPE_ID "+ 
+				   				" WHERE MS.ME_START_DATE>='%s' AND MS.ME_END_DATE<='%s' "+ 
+				   				" GROUP BY REQ_EQ_TYPE_ID, MS.SCH_HALL_ID , NET.DESCRIPTION, REQ_EQ_COUNT, EQ_COUNT_AVAILABLE ",			
+					formatHour0.format(start),
+					formatHour23.format(end)
+				   );
 		   res = statementNom.executeQuery(sql);
-		   		   
+		   Integer count = 0;		   
 		   while( res.next() ){			   
-			   map.put(res.getString("DESCRIPTION"), res.getInt("4"));			   
+			   count = map.get(res.getString("DESCRIPTION"));
+			   map.put(res.getString("DESCRIPTION"), count-res.getInt("OCCUPIED"));			   
 		   }
 		   return map; 
 	   } catch (SQLException e) {
@@ -461,7 +475,7 @@ public class JdbcConnector {
    
    public Boolean isHallAvailable(Schedule sch) throws SQLException{
 	   try{		   		   
-		   String sql = String.format("SELECT SCH_ME_ID FROM MAIN_SCHEDULE WHERE SCH_HALL_ID =%d AND ( ME_START_DATE>='%s' AND ME_START_DATE<='%s')OR( ME_END_DATE>='%s' AND ME_END_DATE<='%s')",
+		   String sql = String.format("SELECT SCH_ME_ID FROM MAIN_SCHEDULE WHERE SCH_HALL_ID =%d AND (( ME_START_DATE>='%s' AND ME_START_DATE<='%s')OR( ME_END_DATE>='%s' AND ME_END_DATE<='%s'))",
 				   						sch.getHallId(),
 				   						format.format(sch.getStartDate()),
 				   						format.format(sch.getEndDate()),

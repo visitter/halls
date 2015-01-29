@@ -170,7 +170,8 @@ public class RequestViewer implements Serializable {
      	System.out.println(this.event.getData());
      	selectedRequest = (Request)this.event.getData();
      	selectedRequest.setStartDate(format.format(this.event.getStartDate()));
-        selectedRequest.setEndDate(format.format(this.event.getEndDate()));        
+        selectedRequest.setEndDate(format.format(this.event.getEndDate()));
+        checkAvailability();
     }
      
     public void onEventResize(ScheduleEntryResizeEvent event) {

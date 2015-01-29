@@ -282,10 +282,11 @@ public class ScheduleView implements Serializable {
     	JdbcConnector oCon;
     	try {
 			oCon = new JdbcConnector();
+			
 			if(oCon.updateScheduledMeeting(meeting) ){
 				message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Event updated successfully", meeting.getmName());
 				addMessage(message);
-			}
+			}			
 			oCon.close();
 			
 			eventModel.deleteEvent(event);

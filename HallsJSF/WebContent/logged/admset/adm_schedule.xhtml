@@ -64,7 +64,7 @@
 				        <p:schedule id="schedule" editable="true" draggable="true" value="#{requestViewer.eventModel}" locale="bg_short" centerHeaderTemplate="title" 
 				        	widgetVar="myschedule" timeZone="GMT+2">
 				            <p:ajax event="eventSelect" listener="#{requestViewer.onEventSelect}" update="myPanelGridInfo myPanelGrid2 :form1:infoDlg availableRes" />				            
-				            <p:ajax event="eventMove"   listener="#{requestViewer.onEventMove}"   update="myPanelGridInfo myPanelGrid2 :form1:infoDlg" />		            
+				            <p:ajax event="eventMove"   listener="#{requestViewer.onEventMove}"   update="myPanelGridInfo myPanelGrid2 :form1:infoDlg availableRes" />		            
 		            		<p:ajax event="eventResize" listener="#{requestViewer.onEventResize}" update="myPanelGridInfo myPanelGrid2 :form1:infoDlg" />
 				        </p:schedule>				        
 			    	</h:panelGrid>

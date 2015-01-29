@@ -13,15 +13,15 @@
         <h:form id="formReg">
         	<p:growl id="messages" showDetail="true"/>
         	
-	        <p:panel styleClass="centered" style="height:230px; margin-top:-95px; background:URL('http://127.0.0.1:8080/HallsJSF/img/login/reg_fon1.png') no-repeat;">        		
-	            <h:panelGrid columns="2" style="margin-left:auto; margin-right:auto;">
+	        <p:panel styleClass="centered" style="width:400px; height:230px; margin-top:-95px; background:URL('http://127.0.0.1:8080/HallsJSF/img/login/reg_fon1.png') no-repeat;">        		
+	            <h:panelGrid columns="2" style="margin-left:auto; margin-right:auto; width:400px;">
 	                <h:outputText value="Username"></h:outputText>
 	                 <p:panel styleClass="input-container">	                 	
 	                	<h:inputText  id="username" value="#{registerUser.username}"></h:inputText>
 	                	<p:focus for="username"/>
 	                </p:panel>
 	                
-	                <h:outputText value="Password"></h:outputText>
+	                <h:outputText value="Password" style="width:200px;"></h:outputText>
 	                <p:panel styleClass="input-container">
 	                	<h:inputSecret id="password_1" value="#{registerUser.password1}"></h:inputSecret>
 	                </p:panel>	                
