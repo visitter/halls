@@ -52,13 +52,17 @@
 	    	<p:growl id="messages" showDetail="true" />
 	 		<p:remoteCommand autoRun="true" actionListener="#{scheduleView.getAllEvents}" update="messages"></p:remoteCommand>
 	 		
-	    	<h:panelGrid columnClasses="value" styleClass="mycenter" >
-		        <h3 style="margin-top: 0">SCHEDULE</h3>
-		        <p:schedule id="schedule" resizable="false" editable="false" draggable="false" value="#{scheduleView.eventModel}" widgetVar="myschedule" timeZone="GMT+2">	 
-		            <p:ajax event="dateSelect"  listener="#{scheduleView.onDateSelect}"  update="eventDetails" oncomplete="PF('eventDialog').show();" />
-		            <p:ajax event="eventSelect" listener="#{scheduleView.onEventSelect}" update="eventDetails" oncomplete="PF('eventDialog').show();" />
-		        </p:schedule>
-	    	</h:panelGrid>
+	    	<p:layout style="margin-left: auto; margin-right: auto; min-width:700; min-height:400px;height:700px;width:850px;" id="myPanelGrid" >
+    			<p:layoutUnit position="center" id="commands">
+			    	<h:panelGrid columnClasses="value" style="width:700px; margin-left:auto; margin-right:auto;">
+				        <h3 style="margin-top: 0">SCHEDULE</h3>
+				        <p:schedule id="schedule" resizable="false" editable="false" draggable="false" value="#{scheduleView.eventModel}" widgetVar="myschedule" timeZone="GMT+2">	 
+				            <p:ajax event="dateSelect"  listener="#{scheduleView.onDateSelect}"  update="eventDetails" oncomplete="PF('eventDialog').show();" />
+				            <p:ajax event="eventSelect" listener="#{scheduleView.onEventSelect}" update="eventDetails" oncomplete="PF('eventDialog').show();" />
+				        </p:schedule>
+				    </h:panelGrid>
+				</p:layoutUnit>
+			</p:layout>	    	
 	 		
 	    	<p:dialog widgetVar="eventDialog" header="Meeting info" modal="true" showEffect="explode" hideEffect="clip">
 	        	<h:panelGrid id="eventDetails" columns="2" >

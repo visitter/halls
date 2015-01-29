@@ -13,7 +13,7 @@
         <h:form id="formReg">
         	<p:growl id="messages" showDetail="true"/>
         	
-	        <p:panel styleClass="centered" style="height:190px; margin-top:-95px; background:URL('http://127.0.0.1:8080/HallsJSF/img/login/reg_fon.png') no-repeat;">        		
+	        <p:panel styleClass="centered" style="height:230px; margin-top:-95px; background:URL('http://127.0.0.1:8080/HallsJSF/img/login/reg_fon1.png') no-repeat;">        		
 	            <h:panelGrid columns="2" style="margin-left:auto; margin-right:auto;">
 	                <h:outputText value="Username"></h:outputText>
 	                 <p:panel styleClass="input-container">	                 	
@@ -36,12 +36,16 @@
 	                	<h:inputText id="mail"  value="#{registerUser.mail}"></h:inputText>
 	                </p:panel>
 	                
+	                <h:outputText value="First name and Last name"></h:outputText>
+	                 <p:panel styleClass="input-container">	                 	
+	                	<h:inputText  id="realname" value="#{registerUser.realname}"></h:inputText>	                	
+	                </p:panel>	                
 
 	                <h:outputText value=""></h:outputText>
 	                <h:outputText value=""></h:outputText>	                	            	
 	            </h:panelGrid>	                   
-	            <h:commandLink styleClass="OkButton"  style="top:150px; text-align: center;text-decoration: none;" value="Home" action="index"></h:commandLink>
-	            <h:commandLink styleClass="RegButton" style="top:150px;" value="Sign In" actionListener="#{registerUser.register}" update="messages"></h:commandLink>	            	         
+	            <h:commandLink styleClass="OkButton"  style="top:200px; text-align: center;text-decoration: none;" value="Home" action="index"></h:commandLink>
+	            <h:commandLink styleClass="RegButton" style="top:200px;" value="Sign In" actionListener="#{registerUser.register}" update="messages"></h:commandLink>	            	         
 	        </p:panel>
         </h:form>
     </h:body>

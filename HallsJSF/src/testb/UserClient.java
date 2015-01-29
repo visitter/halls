@@ -5,6 +5,14 @@ public class UserClient {
 	private String password;
 	private String email;
 	private String userRole = "user";
+	private String userRealName;
+	
+	public String getUserRealName() {
+		return userRealName;
+	}
+	public void setUserRealName(String userRealName) {
+		this.userRealName = userRealName;
+	}
 	public String getUsername() {
 		return username;
 	}
@@ -30,10 +38,11 @@ public class UserClient {
 		this.userRole = userRole;
 	}
 	
-	public UserClient( String username, String userpass, String email){
+	public UserClient( String username, String userpass, String email, String userRealName){
 		setUsername(username);
 		setPassword(userpass);
-		setEmail(email);		
+		setEmail(email);
+		setUserRealName(userRealName);
 	}
 
 }

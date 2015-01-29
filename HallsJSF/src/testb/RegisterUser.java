@@ -16,7 +16,18 @@ public class RegisterUser {
 	private String password1;
 	private String password2;
 	private String mail;	
+	private String realname;
 	
+	public String getRealname() {
+		return realname;
+	}
+
+
+	public void setRealname(String realname) {
+		this.realname = realname;
+	}
+
+
 	public String getUsername() {
 		return username;
 	}
@@ -66,14 +77,15 @@ public class RegisterUser {
 		if( validateUserName() &&
 				validatePass1() &&
 					validatePass2() &&
-						validateMail() ){
+						validateMail() &&
+							validateRealUserName()){
 		
 			JdbcConnector oCon=null;
 			try {
 				oCon = new JdbcConnector();
 				
 				if( oCon.isUserAvailable(username)){
-					if( oCon.insertClient(new UserClient(getUsername(), getPassword1(), getMail()))){
+					if( oCon.insertClient(new UserClient(getUsername(), getPassword1(), getMail(), getRealname()))){
 						addMessage("Success", "User created");
 					};
 				}else{
@@ -115,10 +127,16 @@ public class RegisterUser {
 			return false;
 		}else return true;
 	}
+	public Boolean validateRealUserName(){
+		System.out.println("Validating name");
+		if(getRealname().length()<4){			
+			addMessage("First name and Last name invalid","Minimum 4 symbols required");
+			return false;
+		}else return true;
+	}
 	public void addMessage(String summary, String detail) {
 	        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, summary, detail);
 	        FacesContext.getCurrentInstance().addMessage(null, message);
-	    }
-   
+	}	
   }
 

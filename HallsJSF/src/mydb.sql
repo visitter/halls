@@ -159,8 +159,10 @@ SET SCHEMA APP;
 create table users (
   user_name         varchar(15) not null primary key,
   user_pass         varchar(15) not null,
-  user_mail         varchar(40) not null 
+  user_mail         varchar(40) not null,
+  user_realName     varchar(40)
 );
+
 
 SET SCHEMA APP;
 create table user_roles (
@@ -171,7 +173,9 @@ create table user_roles (
 
 
 SELECT * FROM USERS;
-
+UPDATE USERS SET USER_REALNAME = 'IZ admin' WHERE user_name='admin';
+UPDATE USERS SET USER_REALNAME = 'Ivan Zhotev' WHERE user_name='ivan';
+UPDATE USERS SET USER_REALNAME = 'IZ creator' WHERE user_name='creator';
 --INSERT INTO USERS VALUES('admin', '111', 'jotkata@abv.bg');
 --INSERT INTO USERS VALUES('ivan', '222', 'ivanzhotev@gmail.com');
 --DELETE FROM USERS WHERE user_name in ('mimi','mira') 

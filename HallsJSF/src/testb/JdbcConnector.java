@@ -493,10 +493,11 @@ public class JdbcConnector {
    public Boolean insertClient( UserClient uc ) throws SQLException{
 	   try{		   
 		   connection.setAutoCommit(false); 
-		   String sql = String.format("INSERT INTO users (user_name, user_pass, user_mail) VALUES ('%s', '%s', '%s')",
+		   String sql = String.format("INSERT INTO users (user_name, user_pass, user_mail, user_realName) VALUES ('%s', '%s', '%s', '%s')",
 				   						uc.getUsername(),				   						
 				   						uc.getPassword(),
-				   						uc.getEmail()
+				   						uc.getEmail(),
+				   						uc.getUserRealName()
 				   					);
 		   
 		   if( statementNom.executeUpdate(sql)>0){

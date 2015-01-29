@@ -52,11 +52,11 @@
     	<h:form id="form">
     		<p:growl id="messages" showDetail="true" />
     		<p:remoteCommand autoRun="true" actionListener="#{requestViewer.getAllRequests}" update="messages myPanelGrid"/>    		    		
-    		<p:layout style="margin-left: auto; margin-right: auto; min-width:700; min-height:400px;height:600px;width:800px;" id="myPanelGrid" >
+    		<p:layout style="margin-left: auto; margin-right: auto; min-width:700; min-height:400px;height:700px;width:850px;" id="myPanelGrid" >
     			<p:layoutUnit position="center" id="commands">
 			    	<h:panelGrid columnClasses="value" style="width:700px; margin-left:auto; margin-right:auto;">
-				        <h3>Hall requests</h3>
-				        <p:schedule id="schedule" editable="false" draggable="fasle" value="#{requestViewer.eventModel}" locale="bg_short" 
+				        <h3 style="margin-top: 0;">Hall requests</h3>
+				        <p:schedule id="schedule" editable="false" draggable="fasle" value="#{requestViewer.eventModel}"  
 				        	centerHeaderTemplate="title" widgetVar="myschedule" timeZone="GMT+2">
 				            <p:ajax event="eventSelect" listener="#{requestViewer.onEventSelectNoAdd}"  update=":form1:infoDlg" oncomplete="PF('eventDialog').show();"/>
 				        </p:schedule>				        
