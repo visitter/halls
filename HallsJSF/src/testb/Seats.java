@@ -427,7 +427,13 @@ public class Seats implements Serializable{
 	
 	public void setPositions(){
 		if( readyReq>-1){
-			setRequest( requestsList.get(readyReq) );
+			for( Request req:requestsList){
+				if( readyReq.equals(req.getId())){
+					setRequest(req);
+					break;
+				}
+			}
+			
 			System.out.println("request "+request.getId());
 			addElements();
 		}

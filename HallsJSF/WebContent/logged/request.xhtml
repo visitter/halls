@@ -104,18 +104,18 @@
 			     						<p:outputLabel for="end" value="End" />
 			     						<p:calendar id="end"   value="#{seats.endDate}" navigator="true" mask="true" pattern="dd-MM-yyyy HH:mm" mindate="#{seats.minDate}"/>
 				            		</p:menuitem>				        		
-				            		<p:menuitem>				            		
+				            		<p:menuitem>	
+				            			<p:outputLabel for="someReadyReqs" value="Preset" />			            		
 			     						<p:selectOneMenu id="someReadyReqs" value="#{seats.readyReq}" effect="fade" style="width:180px;" >
 					            			<p:ajax  listener="#{seats.setPositions}" update=":form:myPanelGrid2"></p:ajax>
 					            			<f:selectItems value="#{seats.requestsList}" var="c" itemLabel="#{c.name}" itemValue="#{c.id}" />				            
 					        			</p:selectOneMenu>
-				            		</p:menuitem>			            		
-				            		<p:menuitem value="--------------"></p:menuitem>
-							        <p:menuitem id="eq1" value="Chair"     actionListener="#{seats.addElement}"    update=":form:myPanelGrid2 :form:messages"/>
-							        <p:menuitem id="eq2" value="Projector" actionListener="#{seats.addElement}"    update=":form:myPanelGrid2 :form:messages"/>
-							        <p:menuitem id="eq3" value="Banner"    actionListener="#{seats.addElement}"    update=":form:myPanelGrid2 :form:messages"/>
-							        <p:menuitem id="eq4" value="Stand"     actionListener="#{seats.addElement}"    update=":form:myPanelGrid2 :form:messages"/>
-							        <p:menuitem id="eq5" value="Table"     actionListener="#{seats.addElement}"    update=":form:myPanelGrid2 :form:messages"/>
+				            		</p:menuitem>
+							        <p:menuitem id="eq1" value="Add Chair"     actionListener="#{seats.addElement}"    update=":form:myPanelGrid2 :form:messages"/>
+							        <p:menuitem id="eq2" value="Add Projector" actionListener="#{seats.addElement}"    update=":form:myPanelGrid2 :form:messages"/>
+							        <p:menuitem id="eq3" value="Add Banner"    actionListener="#{seats.addElement}"    update=":form:myPanelGrid2 :form:messages"/>
+							        <p:menuitem id="eq4" value="Add Stand"     actionListener="#{seats.addElement}"    update=":form:myPanelGrid2 :form:messages"/>
+							        <p:menuitem id="eq5" value="Add Table"     actionListener="#{seats.addElement}"    update=":form:myPanelGrid2 :form:messages"/>
 							        <p:menuitem>
 							        	<p:commandButton value="Request" style="width:95%; margin-left:auto;margin-right:auto;" onclick="PF('eventDialogSave').show();"></p:commandButton>					
 							        </p:menuitem>							        

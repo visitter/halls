@@ -319,9 +319,9 @@ public class JdbcConnector {
 	   try {
 		   String sql = "";
 		   if( isService )
-			   sql = "SELECT REQ_ID, REQ_NAME, REQ_CU_ID, REQ_START_DATE, REQ_END_DATE FROM MAIN_REQUESTS WHERE REQ_ID < 3";
+			   sql = "SELECT REQ_ID, REQ_NAME, REQ_CU_ID, REQ_START_DATE, REQ_END_DATE FROM MAIN_REQUESTS WHERE REQ_CU_ID ='creator'";
 		   else
-			   sql = "SELECT REQ_ID, REQ_NAME, REQ_CU_ID, REQ_START_DATE, REQ_END_DATE FROM MAIN_REQUESTS";
+			   sql = "SELECT REQ_ID, REQ_NAME, REQ_CU_ID, REQ_START_DATE, REQ_END_DATE FROM MAIN_REQUESTS WHERE REQ_CU_ID <>'creator'";
 				   
 		   resultSet = statementNom.executeQuery(sql);
 		   
