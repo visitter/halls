@@ -6,7 +6,7 @@
   	xmlns:p="http://primefaces.org/ui"  >
     <h:head>
     	<meta charset="UTF-8"></meta> 
-        <title>Inventory</title>              
+        <title>USERS</title>              
         <link rel="icon"       type="image/png"	href="http://127.0.0.1:8080/HallsJSF/favicon.png" />
         <link rel="stylesheet" type="text/css"  href="http://127.0.0.1:8080/HallsJSF/css/styles.css" />
         <link rel="stylesheet" type="text/css"  href="http://127.0.0.1:8080/HallsJSF/css/hover.css" />
@@ -61,8 +61,8 @@
         	
 			<p:layout style="margin-left: auto; margin-right: auto; min-width:970px; min-height:400px;height:600px;width:1250px;" id="myPanelGrid" >
     			<p:layoutUnit position="center" size="500" maxSize="650" id="layUI">
-    				<p:dataTable id="tbl_inventory" var="equipment" value="#{equipmentManager.arrEq}" selectionMode="single"
-    					selection="#{equipmentManager.selectedEq}" rowKey="#{equipment.id}"    					
+    				<p:dataTable id="tbl_inventory" var="userClient" value="#{userClientManager.arr}" selectionMode="single"
+    					selection="#{userClientManager.selected}" rowKey="#{userClient.username}"    					
                  		paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}     {Exporters}"
                  		paginator="true" rows="10" style="margin-bottom:20px" >
  						
@@ -90,36 +90,34 @@
 				 
 				        <p:column>
 				            <f:facet name="header">
-				                <h:outputText value="Number" />
+				                <h:outputText value="Account" />
 				            </f:facet>
-				            <h:outputText value="#{equipment.id}" />
+				            <h:outputText value="#{userClient.username}" />
 				        </p:column>
 				 
 				        <p:column>
 				            <f:facet name="header">
-				                <h:outputText value="Description"/>
+				                <h:outputText value="EMail"/>
 				            </f:facet>
-				            <h:outputText value="#{equipment.row.desc}" />
+				            <h:outputText value="#{userClient.email}" />
 				        </p:column>
 				         
 				        <p:column>
 				            <f:facet name="header">
-				                <h:outputText value="Count"/>
+				                <h:outputText value="Name"/>
 				            </f:facet>
-				            <h:outputText value="#{equipment.count}" />
+				            <h:outputText value="#{userClient.userRealName}" />
 				        </p:column>
 					</p:dataTable>
     			</p:layoutUnit>
     			
     			<p:layoutUnit position="west" resizable="true" size="320" minSize="320" maxSize="350">
    				  	<p:accordionPanel>				        
-				        <p:tab title="Invetory">
+				        <p:tab title="User actions">
 				            <h:panelGrid columns="1">
 				            	<p:growl id="menu_messages_eq" showDetail="true"/>				            	
 				            	<p:menu>
-							        <p:menuitem value="Add"    update=":form3:displaySave" onclick="PF('eventDialogSave').show();" disabled="false"/>
-						            <p:menuitem value="Edit"   update=":form2:displayEdit" onclick="PF('eventDialogEdit').show();" disabled="false"/>
-						            <p:menuitem value="Delete" update=":form1:displayDel"  onclick="PF('eventDialogDel').show();"  disabled="false"/>						            						            						            					            
+							        <p:menuitem value="Action"    update=":form2:displayEdit" onclick="PF('eventDialogEdit').show();" disabled="false"/>			            
 						        </p:menu>					        
 				            </h:panelGrid>
 				        </p:tab>
@@ -127,76 +125,52 @@
     			</p:layoutUnit>	
 		    </p:layout>		    
         </h:form>
-        
-		 <h:form id="form3">
-		 	<p:dialog id="dialog_save" header="Add new row" widgetVar="eventDialogSave" modal="true"
-          		resizable="false" width="400" showEffect="clip" hideEffect="fold" >
-	            <h:panelGrid id="displaySave" columns="2" cellpadding="4">
-	                <h:outputText value="Description" />
-	                <p:selectOneMenu id="eqTypes" value="#{equipmentManager.selectedId}" effect="fade" style="width:200px;" >
-						<p:ajax  listener="#{equipmentManager.getSelectedEq}"></p:ajax>
-					    <f:selectItems value="#{equipmentManager.arrEqTypes}" var="c" itemLabel="#{c.desc}" itemValue="#{c.id}" />				            
-					</p:selectOneMenu>
-	                
-	                <h:outputText value="Count" />
-	                <p:inputText value="#{equipmentManager.selectedEq.count}" />
-
-	                <h:outputText value="Id:" />
-	                <p:inputText value="#{equipmentManager.selectedEq.id}" disabled="true"/>
-	                
-	                <p:commandButton value="Exit" oncomplete="PF('eventDialogSave').hide();"/>
-					<p:commandButton id="insButton" value="Save" actionListener="#{equipmentManager.insert}" style="float:right;"
-						update=":form:messages" oncomplete="PF('eventDialogSave').hide();">						
-					</p:commandButton>					
-	            </h:panelGrid>
-	            <p:ajax event="close" listener="#{equipmentManager.getAllEquipment}" update=":form:tbl_inventory"/>
-	        </p:dialog>
-		 </h:form>
-		 
-		 <h:form id="form1">
-      		<p:dialog id="dialog_del" header="Delete a row" widgetVar="eventDialogDel" modal="true"
-          		resizable="false" width="400" showEffect="clip" hideEffect="fold" >
-
-	            <h:panelGrid id="displayDel" columns="2" cellpadding="4">
-	                <h:outputText value="Description" />
-	                <p:inputText value="#{equipmentManager.selectedEq.row.desc}"/>
-	                
-	                <h:outputText value="Count" />
-	                <p:inputText value="#{equipmentManager.selectedEq.count}" />
-
-	                <h:outputText value="Id:" />
-	                <p:inputText value="#{equipmentManager.selectedEq.id}" disabled="true" />
-	                
-	                <p:commandButton value="Exit" oncomplete="PF('eventDialogDel').hide();"/>					
-					<p:commandButton id="remButton" value="Delete" actionListener="#{equipmentManager.delete}" style="float:right;"
-						update=":form:messages" oncomplete="PF('eventDialogDel').hide();">						
-					</p:commandButton>
-	            </h:panelGrid>
-	            <p:ajax event="close" listener="#{equipmentManager.getAllEquipment}" update=":form:tbl_inventory"/>
-	        </p:dialog>
-        </h:form>
-        
+                
         <h:form id="form2">
-        	<p:dialog id="dialog_edit" header="Edit a row" widgetVar="eventDialogEdit" modal="true"
-          		resizable="false" width="400" showEffect="clip" hideEffect="fold">
-
-	            <h:panelGrid id="displayEdit" columns="2" cellpadding="4">
-	                <h:outputText value="Description" />
-	                <p:inputText value="#{equipmentManager.selectedEq.row.desc}"/>
+        	<p:dialog id="dialog_edit" header="Action" widgetVar="eventDialogEdit" modal="true"
+          		resizable="false" width="450" showEffect="clip" hideEffect="fold" style="background:lightblue;">
+	            <h:panelGrid id="displayEdit" columns="2" style="margin-left:auto; margin-right:auto; width:400px;">
+	                <h:outputText value="Username"></h:outputText>
+	                 <p:panel styleClass="input-container">	                 	
+	                	<h:inputText  id="username" value="#{userClientManager.selected.username}"></h:inputText>
+	                	<p:focus for="username"/>
+	                </p:panel>
+	                s
+	                <h:outputText value="Password" style="width:200px;"></h:outputText>
+	                <p:panel styleClass="input-container">
+	                	<h:inputSecret id="password_1" value="#{userClientManager.selected.password}"></h:inputSecret>
+	                </p:panel>
 	                
-	                <h:outputText value="Count" />
-	                <p:inputText value="#{equipmentManager.selectedEq.count}" />
-
-	                <h:outputText value="Id:" />
-	                <p:inputText value="#{equipmentManager.selectedEq.id}" disabled="true"/>
+	                <h:outputText value="E-mail"></h:outputText>
+	                <p:panel styleClass="input-container">
+	                	<h:inputText id="mail"  value="#{userClientManager.selected.email}"></h:inputText>
+	                </p:panel>
 	                
-	                <p:commandButton value="Exit" oncomplete="PF('eventDialogEdit').hide();"/>					
-					<p:commandButton id="updButton" value="Update" actionListener="#{equipmentManager.update}" style="float:right;"
-						update=":form:messages" oncomplete="PF('eventDialogEdit').hide();">						
+	                <h:outputText value="First name and Last name"></h:outputText>
+	                 <p:panel styleClass="input-container">	                 	
+	                	<h:inputText  id="realname" value="#{userClientManager.selected.userRealName}"></h:inputText>	                	
+	                </p:panel>	                
+
+	                <h:outputText value=""></h:outputText>
+	                <h:outputText value=""></h:outputText>
+	                
+	            	<p:commandButton value="Exit" oncomplete="PF('eventDialogEdit').hide();" style="width:120px;"/>
+					<p:commandButton id="updButton" value="Update" actionListener="#{userClientManager.update}" style="float:right;width:120px;"
+						update=":form:messages :form:myPanelGrid" onsuccess="PF('eventDialogEdit').hide();">						
+					</p:commandButton>		                	            	
+					<p:commandButton id="delButton" value="Delete" actionListener="#{userClientManager.delete}" style="width:120px; background:red;"
+						update=":form:messages :form:myPanelGrid" onsuccess="PF('eventDialogEdit').hide();">
+						<p:confirm header="Confirmation" message="Please, confirm DELETE" icon="ui-icon-alert"/>						
 					</p:commandButton>
-	            </h:panelGrid>
-	            <p:ajax event="close" listener="#{equipmentManager.getAllEquipment}" update=":form:tbl_inventory"/>
+					<p:commandButton id="insButton" value="Add" actionListener="#{userClientManager.insert}" style="float:right;width:120px;"
+						update=":form:messages :form:myPanelGrid" onsuccess="PF('eventDialogEdit').hide();">						
+					</p:commandButton>
+	            </h:panelGrid>	          
 	        </p:dialog>
+	        <p:confirmDialog global="true" showEffect="fade" hideEffect="explode">
+        		<p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+        		<p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />        		
+    		</p:confirmDialog>
         </h:form>       
     </h:body>    
     <footer>

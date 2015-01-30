@@ -408,7 +408,7 @@ public class Seats implements Serializable{
 		try {
 			oCon = new JdbcConnector();
 			requestsList = new ArrayList<Request>();
-			requestsList.add( new Request(0, "", "Custom", "", ""));
+			requestsList.add( new Request(0, "", "", "", ""));
 			ArrayList<Request> arr = oCon.getAllRequests(true);
 			if(arr!=null)
 				requestsList.addAll(arr);

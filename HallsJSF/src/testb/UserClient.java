@@ -1,6 +1,13 @@
 package testb;
 
-public class UserClient {
+import java.io.Serializable;
+
+import javax.faces.bean.ManagedBean;
+
+@ManagedBean
+public class UserClient implements Serializable{
+
+	private static final long serialVersionUID = 1L;
 	private String username;
 	private String password;
 	private String email;

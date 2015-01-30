@@ -161,13 +161,11 @@ public class ScheduleView implements Serializable {
         event = new DefaultScheduleEvent("", (Date) selectEvent.getObject(), (Date) selectEvent.getObject());
     }
      
-    public void onEventMove(ScheduleEntryMoveEvent event) {
-        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Event moved", "Day delta:" + event.getDayDelta() + ", Minute delta:" + event.getMinuteDelta());
-        
-        System.out.println(event.getScheduleEvent().getId());
-        System.out.println(event.getScheduleEvent().getTitle());
-        
-        addMessage(message);
+   public void onEventMove(ScheduleEntryMoveEvent event) {
+        //FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Event moved", "Day delta:" + event.getDayDelta() + ", Minute delta:" + event.getMinuteDelta());
+        //System.out.println(event.getScheduleEvent().getId());
+        //System.out.println(event.getScheduleEvent().getTitle());
+        //addMessage(message);
     }
      
     public void onEventResize(ScheduleEntryResizeEvent event) {
@@ -283,10 +281,15 @@ public class ScheduleView implements Serializable {
     	try {
 			oCon = new JdbcConnector();
 			
-			if(oCon.updateScheduledMeeting(meeting) ){
-				message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Event updated successfully", meeting.getmName());
+			if( oCon.isHallAvailable( new Schedule(0, meeting.getHallId(), meeting.getmId(), meeting.getmSDate(), meeting.getmEDate())) ){
+				if(oCon.updateScheduledMeeting(meeting) ){
+					message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Event updated successfully", meeting.getmName());
+					addMessage(message);
+				}
+			}else{
+				message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Hall is occupied for the given period", meeting.getmSDate()+" "+meeting.getmEDate());
 				addMessage(message);
-			}			
+			}
 			oCon.close();
 			
 			eventModel.deleteEvent(event);

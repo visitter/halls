@@ -375,23 +375,7 @@ public class JdbcConnector {
 		   while( res.next() ){
 			   map.put(res.getString("DESCRIPTION"), res.getInt("EQ_COUNT_AVAILABLE"));
 		   }
-		   /*
-		   sql = String.format("SELECT REQ_EQ_TYPE_ID, NET.DESCRIPTION, Sum(REQ_EQ_COUNT), (EQ_COUNT_AVAILABLE-Sum(REQ_EQ_COUNT)) FROM MAIN_SCHEDULE AS MS "+		   
-				   						" INNER JOIN MAIN_MEETINGS AS MM "+ 
-				   						" ON MS.SCH_ME_ID = MM.ME_ID "+
-				   							" INNER JOIN MAIN_REQUESTS_EQUIPMENT AS MRQ "+ 
-				   							" ON MRQ.REQ_ID = MM.ME_REQ_ID "+
-				   								" INNER JOIN NOM_EQ_TYPES AS NET "+
-				   								" ON NET.ID = MRQ.REQ_EQ_TYPE_ID "+
-				   									" INNER JOIN MAIN_EQUIPMENT_INVENTORY AS MEI "+ 
-				   									" ON NET.ID = MEI.EQ_TYPE_ID "+
-				   						" WHERE MS.ME_START_DATE >= '%s' AND MS.ME_END_DATE<='%s' "+
-				   						" GROUP BY REQ_EQ_TYPE_ID, NET.DESCRIPTION, EQ_COUNT_AVAILABLE",
-				   formatHour0.format(start),
-				   formatHour23.format(end)
-				   );
-		   */	
-		   
+		  
 		   sql = String.format( " SELECT REQ_EQ_TYPE_ID, NET.DESCRIPTION, (REQ_EQ_COUNT) AS OCCUPIED, "+
 				   				" (EQ_COUNT_AVAILABLE) AS AVAILABLE FROM MAIN_SCHEDULE AS MS "+	   
 				   					" INNER JOIN MAIN_MEETINGS AS MM "+ 
@@ -571,8 +555,8 @@ public class JdbcConnector {
    public Boolean updateScheduledMeeting(Meeting me){	   
 	   try {
 		   connection.setAutoCommit(false);
-		   String sql = String.format("UPDATE MAIN_SCHEDULE SET SCH_HALL_ID = %d, ME_START_DATE = '%s', ME_END_DATE = '%s' WHERE SCH_ME_ID = %d",
-				   						me.getHallId(),
+		   String sql = String.format("UPDATE MAIN_SCHEDULE SET  ME_START_DATE = '%s', ME_END_DATE = '%s' WHERE SCH_ME_ID = %d",
+				   						//me.getHallId(),
 				   						format.format(me.getmSDate()),
 				   						format.format(me.getmEDate()),
 				   						me.getmId()
@@ -626,12 +610,10 @@ public class JdbcConnector {
 		   else
 			   return arr;		 
 	   } catch (SQLException e) {
-		// TODO Auto-generated catch block
 		   e.printStackTrace();
 		   return null;
 	   }
    }
-   
    public Boolean updateEquipment(Equipment eq){
 	   try {
 		   connection.setAutoCommit(false);
@@ -681,7 +663,6 @@ public class JdbcConnector {
 	   }
 	   return false; 
    }
-   
    public Boolean deleteEquipment(Equipment eq){
 	   try {
 		   connection.setAutoCommit(false);
@@ -689,6 +670,86 @@ public class JdbcConnector {
 				   						eq.getId()
 				   					);   
 		   int resA = statementNom.executeUpdate(sql);		   
+		   		    
+		   if( resA>0 ){
+			   connection.commit();			   
+		   } else {
+			   connection.rollback();
+		   }
+		   connection.setAutoCommit(true);
+		   return resA>0;
+	   } catch (SQLException e) {
+		   e.printStackTrace();		   
+	   }
+	   return false; 
+   }
+   
+   public ArrayList<UserClient> getAllUsers(){
+	   String sql;
+	   
+	   sql = "SELECT u.user_name, u.user_pass, u.user_mail, u.user_realName FROM USERS as u INNER JOIN USER_ROLES as ur ON u.user_name = ur.user_name WHERE ur.role_name ='user'";	   
+	  
+	   try {
+		   ResultSet res =  statementNom.executeQuery(sql);
+		   
+		   ArrayList<UserClient> arr=  new ArrayList<UserClient>();
+		   
+		   while(res.next()){
+				arr.add( new UserClient(
+										res.getString("user_name"),
+										res.getString("user_pass"),
+										res.getString("user_mail"),
+										res.getString("user_realName")
+									)		 
+						);
+		   }
+		   
+		   if( arr.isEmpty() )
+			   return null;
+		   else
+			   return arr;		 
+	   } catch (SQLException e) {
+		   e.printStackTrace();
+		   return null;
+	   }
+   }
+   public Boolean updateUser(UserClient uc){
+	   try {
+		   connection.setAutoCommit(false);
+		   String sql = String.format("UPDATE USERS SET user_pass = '%s', user_mail = '%s', user_realName = '%s' WHERE user_name='%s'",
+				   						uc.getPassword(),
+				   						uc.getEmail(),
+				   						uc.getUserRealName(),
+				   						uc.getUsername()
+				   					);   
+		   int resA = statementNom.executeUpdate(sql);		   
+		   
+		    
+		   if( resA>0 ){
+			   connection.commit();			   
+		   } else {
+			   connection.rollback();
+		   }
+		   connection.setAutoCommit(true);
+		   return resA>0;
+	   } catch (SQLException e) {
+		   e.printStackTrace();		   
+	   }	
+	   return false; 
+   }   
+   public Boolean deleteUser(UserClient uc){
+	   try {
+		   connection.setAutoCommit(false);
+		   String sql = String.format("DELETE FROM USERS WHERE  user_name= '%s'",
+				   						uc.getUsername()
+				   					);
+		   int resA = statementNom.executeUpdate(sql);		   
+		   
+		   sql = String.format("DELETE FROM USER_ROLES WHERE user_name='%s'",
+						uc.getUsername()
+					);
+		   
+		   resA =  statementNom.executeUpdate(sql);
 		   		    
 		   if( resA>0 ){
 			   connection.commit();			   

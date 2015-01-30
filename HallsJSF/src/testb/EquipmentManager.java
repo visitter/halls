@@ -10,13 +10,13 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 
-
 @ManagedBean
 @ViewScoped
 public class EquipmentManager implements Serializable{
 	private static final long serialVersionUID = 1L;
 	private ArrayList<Equipment> arrEq;
 	private Equipment selectedEq = new Equipment(0, new BaseNomenclatureRow(), 0);
+	
 	public Equipment getSelectedEq() {
 		System.out.println(getSelectedId());
 		return selectedEq;

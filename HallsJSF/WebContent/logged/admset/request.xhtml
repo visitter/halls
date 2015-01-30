@@ -20,7 +20,7 @@
                     <a href=".\index_admin.xhtml">HOME</a>
             	</li>
             	<li class ="pulse">
-                    <a href=".\request.xhtml">REQUEST</a>
+                    <a href=".\request.xhtml">CREATE REQUEST</a>
                 </li>
             	<li class ="pulse">
                     <a href=".\adm_schedule.xhtml">REQUESTS</a>
@@ -36,6 +36,9 @@
             	</li>
             	<li class ="pulse">
                     <a href=".\equipment.xhtml">INVETORY</a>
+                </li>
+                <li class ="pulse">
+                    <a href=".\users.xhtml">USERS</a>
                 </li>
                 <li class ="pulse">	            
 					<h:form>	                                	
@@ -81,8 +84,7 @@
 	    	<p:inputText type="hidden"  id="myTextId" value="#{seats.selectedEq}" >
 				<p:ajax listener="#{seats.refresh}"></p:ajax>	    					    				
 	    	</p:inputText>
-	    	
-		 	<!-- <p:layout style="min-width:400px;min-height:400px;height:600px;" id="myPanelGrid" >-->
+	    			 	
 		 	<p:layout style="margin-left: auto; margin-right: auto; min-width:970px; min-height:400px;height:600px;width:1250px;" id="myPanelGrid" >	 		    			   
 	    		<p:layoutUnit position="west" size="350" maxSize="650" id="commands">	    					    		
 		    		<p:accordionPanel id="accordPanel">	
@@ -98,7 +100,7 @@
 			     							</p:selectOneMenu>
 			     						</div>
 			     						<p:outputLabel for="name" value="Name(Desc)" />
-			     						<p:inputText id="name" required="true" value="#{seats.request.name}">
+			     						<p:inputText id="name" required="true" value="#{seats.request.name}"  placeholder="set title">
 			     							<f:validateLength minimum="5"/>
 			     						</p:inputText>
 			     						
@@ -110,7 +112,7 @@
 				            		</p:menuitem>				
 				            		<p:menuitem>
 				            			<p:outputLabel for="someReadyReqs" value="Preset" />				            		
-			     						<p:selectOneMenu id="someReadyReqs" value="#{seats.readyReq}" effect="fade" style="width:180px;" >
+			     						<p:selectOneMenu id="someReadyReqs" value="#{seats.readyReq}" effect="fade" style="width:200px;" >
 					            			<p:ajax  listener="#{seats.setPositions}" update=":form:myPanelGrid2"></p:ajax>
 					            			<f:selectItems value="#{seats.requestsList}" var="c" itemLabel="#{c.name}" itemValue="#{c.id}" />				            
 					        			</p:selectOneMenu>
@@ -133,8 +135,8 @@
         			<p:menuitem id="delItem" value="Delete" update=":form:myPanelGrid" icon="ui-icon-close" actionListener="#{seats.removeItem}"/>
     			</p:contextMenu>
 	    		
-	    		<p:layoutUnit position="center" size="500" maxSize="650" id="myPanelGrid1"  >
-	    			<p:panel id="myPanelGrid2" style="position:relative; width:660px; height:98%;">
+	    		<p:layoutUnit position="center" size="500" maxSize="861" id="myPanelGrid1"  >
+	    			<p:panel id="myPanelGrid2" style="position:relative; width:860px; height:98%;">
 	    			</p:panel>	    			
 	    		</p:layoutUnit>
 	    			    		
