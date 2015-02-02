@@ -56,7 +56,7 @@
 		    </f:facet>      
 		</p:ajaxStatus>
         
-        <h:form  id="form">       		        	
+        <h:form id="form">       		        	
         	<p:growl id="messages" showDetail="true"/>	
         	<p:remoteCommand autoRun="true" actionListener="#{nomsExporterView.getAllRows}" update=":form:tbl messages"></p:remoteCommand>
         	<p:layout style="margin-left: auto; margin-right: auto; min-width:970px; min-height:400px;height:600px;width:1250px;" id="myPanelGrid" >        	   			   
@@ -102,6 +102,8 @@
 				            <h:outputText value="#{baseNomenclatureRow.desc}" />
 				        </p:column>
 					</p:dataTable>
+					<p:fileUpload  fileUploadListener="#{nomsExporterView.upload}" mode="advanced" dragDropSupport="false"
+                          				update="messages" sizeLimit="100000" allowTypes="/(\.|\/)(gif|jpe?g|png)$/"  />	
     			</p:layoutUnit>
     			
     			<p:layoutUnit position="west" resizable="true" size="320" minSize="320" maxSize="350"  style="width:660px;">
@@ -122,8 +124,8 @@
 							        <p:menuitem value="List"    actionListener="#{nomsExporterView.getAllRows}" update=":form:tbl menu_messages_noms"/>
 							        <p:menuitem value="Add"  update=":form1:displaySave" onclick="PF('eventDialogSave').show();"/>
 						            <p:menuitem value="Edit"  update=":form2:displayEdit" onclick="PF('eventDialogEdit').show();"/>
-						            <p:menuitem value="Delete" update=":form1:displayDel"  onclick="PF('eventDialogDel').show();"/>						            						            						            					            
-						        </p:menu>		        
+						            <p:menuitem value="Delete" update=":form1:displayDel"  onclick="PF('eventDialogDel').show();"/>            					            
+						        </p:menu>   
 				            </h:panelGrid>
 				        </p:tab>
 				    </p:accordionPanel>
@@ -143,6 +145,8 @@
                 
 	                <h:outputText value="Id:" />
 	                <p:inputText value="#{nomsExporterView.newRow.id}" />
+	                
+	                
 	                
 	                <p:commandButton value="Exit" oncomplete="PF('eventDialogSave').hide();"/>
 					<p:commandButton id="insButton" value="Save" actionListener="#{nomsExporterView.insert}" style="float:right;"

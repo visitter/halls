@@ -1,5 +1,11 @@
 package testb;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -8,12 +14,14 @@ import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedProperty; 
 import javax.faces.context.FacesContext;
+
+import org.primefaces.event.FileUploadEvent;
 import org.primefaces.event.SelectEvent;
 
 public class NomsExporterView implements Serializable {
   
 	private static final long serialVersionUID = 1L;
-	
+	    
 	private String nomName;
 	public String getNomName() {
 		return nomName;
@@ -103,6 +111,40 @@ public class NomsExporterView implements Serializable {
 	public void onRowSelect(SelectEvent event) {
 		setSelectedRow(((BaseNomenclatureRow) event.getObject()));
 		selectedRow.setNomName(nomName);
-
-    }   
+    }	
+	public void upload(FileUploadEvent event) {  
+		System.out.println("uploading");
+		FacesMessage message = null;
+		try {
+			if( copyFile(event.getFile().getFileName(), event.getFile().getInputstream()) ){
+				message = new FacesMessage("Succesful", event.getFile().getFileName() + " is uploaded.");
+			}else{
+				message = new FacesMessage("Failed", event.getFile().getFileName() + " failed to upload.");
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+			message = new FacesMessage("Failed", e.getMessage() + " failed to upload.");
+		}
+        FacesContext.getCurrentInstance().addMessage(null, message);
+    }
+	public Boolean copyFile(String fileName, InputStream in) {
+        try {
+             OutputStream out = new FileOutputStream(new File("C:\\Program Files (x86)\\Apache-Tomcat-7\\webapps\\HallsJSF\\img\\equip\\" + fileName));
+           
+             int read = 0;
+             byte[] bytes = new byte[1024];
+           
+             while ((read = in.read(bytes)) != -1) {
+                 out.write(bytes, 0, read);
+             }
+           
+             in.close();
+             out.flush();
+             out.close();
+             return true;
+             } catch (IOException e) {
+            	 System.out.println(e.getMessage());
+            	 return false;
+             }
+	}
 }
