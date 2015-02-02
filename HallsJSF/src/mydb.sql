@@ -58,7 +58,6 @@ CREATE TABLE MAIN_SCHEDULE(
 	ME_END_DATE TIMESTAMP NOT NULL	
 );
 
-
 CREATE TABLE USERS (
   user_name         varchar(15) not null primary key,
   user_pass         varchar(15) not null,

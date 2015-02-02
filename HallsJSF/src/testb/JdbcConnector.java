@@ -459,8 +459,10 @@ public class JdbcConnector {
    
    public Boolean isHallAvailable(Schedule sch) throws SQLException{
 	   try{		   		   
-		   String sql = String.format("SELECT SCH_ME_ID FROM MAIN_SCHEDULE WHERE SCH_HALL_ID =%d AND (( ME_START_DATE>='%s' AND ME_START_DATE<='%s')OR( ME_END_DATE>='%s' AND ME_END_DATE<='%s'))",
+		   String sql = String.format("SELECT SCH_ME_ID FROM MAIN_SCHEDULE WHERE SCH_HALL_ID =%d  AND SCH_ME_ID<>%d "
+		   							+ "AND (( ME_START_DATE>='%s' AND ME_START_DATE<='%s')OR( ME_END_DATE>='%s' AND ME_END_DATE<='%s'))",
 				   						sch.getHallId(),
+				   						sch.getMeetingId(),
 				   						format.format(sch.getStartDate()),
 				   						format.format(sch.getEndDate()),
 				   						format.format(sch.getStartDate()),
@@ -555,8 +557,8 @@ public class JdbcConnector {
    public Boolean updateScheduledMeeting(Meeting me){	   
 	   try {
 		   connection.setAutoCommit(false);
-		   String sql = String.format("UPDATE MAIN_SCHEDULE SET  ME_START_DATE = '%s', ME_END_DATE = '%s' WHERE SCH_ME_ID = %d",
-				   						//me.getHallId(),
+		   String sql = String.format("UPDATE MAIN_SCHEDULE SET SCH_HALL_ID = %d, ME_START_DATE = '%s', ME_END_DATE = '%s' WHERE SCH_ME_ID = %d",
+				   						me.getHallId(),
 				   						format.format(me.getmSDate()),
 				   						format.format(me.getmEDate()),
 				   						me.getmId()

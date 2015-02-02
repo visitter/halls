@@ -14,7 +14,7 @@ function submitForm(){
 }       	
 
 function navigateTo(url){
-	window.location.replace(url);
+	window.location.href=url;
 }
 
 
