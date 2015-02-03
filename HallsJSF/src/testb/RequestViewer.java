@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -111,11 +112,14 @@ public class RequestViewer implements Serializable {
 		return hashMap;
 	}
 	
-	
+	private Date minDateFrom;	
+	public Date getMinDateFrom() {
+		return minDateFrom;
+	}
 	@PostConstruct
     public void init() {		
     	System.out.println("init");    		
-    	
+    	minDateFrom = Calendar.getInstance().getTime();
     	newRequest = new Request(0,"","Ново","01-01-2015 12:00:00","01-01-2015 14:00:00");
             
     	eventModel = new DefaultScheduleModel();
@@ -131,16 +135,19 @@ public class RequestViewer implements Serializable {
 		}
     	if(eventModel==null)
     		System.out.println("eventModel = nul");
-    	//eventModel.addEvent(event);
     	
     	halls = HallsManager.getAllHalls();
     	hall = halls.get(0);	
     	
     	getAllMeetingTypes();
-    	
-        //checkAvailability();
     }
 	
+	public void dateChange(SelectEvent event) {
+	    System.out.println("Selected date = "+this.event.getStartDate());
+	    if(this.event.getEndDate().before(this.event.getStartDate())){
+	    	((DefaultScheduleEvent)this.event).setEndDate(this.event.getStartDate());
+	    }
+	}
 	
 	public void getSelectedHall(){
 		System.out.println(hallId);

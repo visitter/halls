@@ -22,6 +22,7 @@ import org.primefaces.component.dnd.Draggable;
 import org.primefaces.component.graphicimage.GraphicImage;
 import org.primefaces.component.menuitem.UIMenuItem;
 import org.primefaces.event.DragDropEvent;
+import org.primefaces.event.SelectEvent;
 import org.primefaces.model.menu.MenuModel;
 
 @ManagedBean
@@ -64,17 +65,29 @@ public class Seats implements Serializable{
 	private int iterator = 0;	 
 	private HashMap<String,Integer> hmItemsCount = new HashMap<String, Integer>();
 	
-	private Date minDate;	
-	public Date getMinDate() {
-		return minDate;
+	private Date minDateFrom;	
+	public Date getMinDateFrom() {
+		return minDateFrom;
+	}
+	public void setMinDateFrom(Date minDateFrom) {
+		this.minDateFrom = minDateFrom;
 	}
 	
+	private Date minDateTo;
+	public Date getMinDateTo() {
+		return minDateTo;
+	}
+	public void setMinDateTo(Date minDateTo) {
+		this.minDateTo = minDateTo;
+	}
+
 	private Date startDate;
 	public Date getStartDate() {
 		return startDate;
 	}
 	public void setStartDate(Date startDate) {
 		this.startDate = startDate;
+		System.out.println(startDate);
 	}
 	
 	private Date endDate;
@@ -92,7 +105,6 @@ public class Seats implements Serializable{
 	public void setReadyReq(Integer readyReq) {
 		this.readyReq = readyReq;
 	}
-
 	
 	private ArrayList<Request> requestsList = null;
 	public ArrayList<Request> getRequestsList() {
@@ -131,13 +143,22 @@ public class Seats implements Serializable{
 	}
 	public void setEqItems(String eqItems) {
 		this.eqItems = eqItems;
+		
+	}
+	
+	public void dateChange(SelectEvent event) {
+	    System.out.println("Selected date = "+this.startDate);
+	    if(endDate.before(this.startDate)){
+	    	endDate = this.startDate;
+	    }
 	}
 	
 	@PostConstruct	
 	public void Init(){		
 		Calendar cal = Calendar.getInstance();
 	
-		minDate = cal.getTime();
+		minDateFrom = cal.getTime();
+		minDateTo = cal.getTime();
 		startDate =  cal.getTime();
 		endDate =  cal.getTime();
 		getAllRequests();

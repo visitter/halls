@@ -82,10 +82,16 @@
 					    <p:inputText id="description" value="#{requestViewer.meetingDesc}" style="width:190px;"></p:inputText>
 			 			
 				        <h:outputLabel for="from" value="Start:" />
-				        <p:calendar id="from" value="#{requestViewer.event.startDate}" navigator="true" mask="true" pattern="dd-MM-yyyy HH:mm" update=":form1:infoDlg"/>
+				        <p:calendar id="from" value="#{requestViewer.event.startDate}" navigator="true" mask="true" pattern="dd-MM-yyyy HH:mm"
+				        	 mindate="#{requestViewer.minDateFrom}" update=":form1:infoDlg">
+				         	<p:ajax event="dateSelect" listener="#{requestViewer.dateChange}" update = "to schedule"/>
+			 			</p:calendar> 							 	
 			            			
 			            <h:outputLabel for="to" value="End:" />
-			            <p:calendar id="to" value="#{requestViewer.event.endDate}" navigator="true" mask="true" pattern="dd-MM-yyyy HH:mm" update=":form1:infoDlg"/>			            
+			            <p:calendar id="to" value="#{requestViewer.event.endDate}" navigator="true" mask="true" pattern="dd-MM-yyyy HH:mm" 
+			            	mindate="#{requestViewer.event.startDate}" update=":form1:infoDlg" >					
+			     			<p:ajax event="dateSelect" listener="#{requestViewer.dateChange}"  update = "from schedule"/>
+			     		</p:calendar>			            			            
 			    	</h:panelGrid>
 			    	
 			    	<p:panel id="myPanelGrid2" style="position:relative; width:98%; height:58%;">

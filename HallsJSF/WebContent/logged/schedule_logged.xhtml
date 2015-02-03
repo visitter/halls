@@ -69,7 +69,7 @@
 		            <h:outputLabel for="title" value="Title:" />
 	            	<p:inputText style="width:300px;" id="title" value="#{scheduleView.event.title}"/>
 	            	
-	            	<h:outputLabel for="someHalls" value="Hall" />	            	
+	            	<h:outputLabel for="someHalls" value="Hall:" />	            	
 	            	<p:selectOneMenu id="someHalls" value="#{scheduleView.meeting.hallId}" effect="fade" style="width:310px;" >						
 					    <f:selectItems value="#{requestViewer.halls}" var="c" itemLabel="#{c.capacity} #{c.name}" itemValue="#{c.id}" />				            
 					</p:selectOneMenu>

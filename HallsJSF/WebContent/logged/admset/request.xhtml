@@ -105,10 +105,16 @@
 			     						</p:inputText>
 			     						
 			     						<p:outputLabel for="start" value="Start" />
-			 							<p:calendar id="start" value="#{seats.startDate}" navigator="true" mask="true" pattern="dd-MM-yyyy HH:mm" mindate="#{seats.minDate}"/> 							 	
+			 							<p:calendar id="start" value="#{seats.startDate}" navigator="true" mask="true" pattern="dd-MM-yyyy HH:mm"
+			 							 	mindate="#{seats.minDateFrom}">
+			 							 	<p:ajax event="dateSelect" listener="#{seats.dateChange}"  update = "end"/>
+			 							 </p:calendar> 							 	
 			     						
 			     						<p:outputLabel for="end" value="End" />
-			     						<p:calendar id="end"   value="#{seats.endDate}" navigator="true" mask="true" pattern="dd-MM-yyyy HH:mm" mindate="#{seats.minDate}"/>
+			     						<p:calendar id="end"   value="#{seats.endDate}" navigator="true" mask="true" pattern="dd-MM-yyyy HH:mm" 
+			     							mindate="#{seats.startDate}">
+			     							<p:ajax event="dateSelect" listener="#{seats.dateChange}"  update = "start"/>
+			     						</p:calendar>
 				            		</p:menuitem>				
 				            		<p:menuitem>
 				            			<p:outputLabel for="someReadyReqs" value="Preset" />				            		
