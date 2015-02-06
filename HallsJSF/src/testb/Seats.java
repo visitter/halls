@@ -162,7 +162,6 @@ public class Seats implements Serializable{
 		startDate =  cal.getTime();
 		endDate =  cal.getTime();
 		getAllRequests();
-		
 	}	
 	
 	public void addElement(ActionEvent event) {
@@ -355,7 +354,7 @@ public class Seats implements Serializable{
 		}
 	}
 	
-	public void addElements() {
+	public void addElements(Request  request) {
 		UIComponent component=null;
 		try{
 			component = FacesContext.getCurrentInstance().getViewRoot().
@@ -447,16 +446,18 @@ public class Seats implements Serializable{
 	}
 	
 	public void setPositions(){
+		Request selReq = null;
 		if( readyReq>-1){
 			for( Request req:requestsList){
 				if( readyReq.equals(req.getId())){
-					setRequest(req);
+					selReq = req;
+					//setRequest(req);					
 					break;
 				}
 			}
 			
 			System.out.println("request "+request.getId());
-			addElements();
+			addElements(selReq);
 		}
 		System.out.println("readyReq "+ readyReq);
 	}
