@@ -116,6 +116,10 @@ public class RequestViewer implements Serializable {
 	public Date getMinDateFrom() {
 		return minDateFrom;
 	}
+	
+	private BaseNomManager manager;
+	private ArrayList<BaseNomenclatureRow> equipmentList = null;
+	
 	@PostConstruct
     public void init() {		
     	System.out.println("init");    		
@@ -140,6 +144,7 @@ public class RequestViewer implements Serializable {
     	hall = halls.get(0);	
     	
     	getAllMeetingTypes();
+    	getAllRows();
     }
 	
 	public void dateChange(SelectEvent event) {
@@ -339,6 +344,7 @@ public class RequestViewer implements Serializable {
 		{
 			if( (selectedRequest.getReq()!=null)&&(selectedRequest.getReq().size()>0) )
 			{	
+				String cFileName = "";
 				for( Requirements req:selectedRequest.getReq()){
 					String[] arrP = req.getPositions().split(";");
 					ArrayList<Point> points = null; 
@@ -353,14 +359,33 @@ public class RequestViewer implements Serializable {
 						GraphicImage p = new GraphicImage();
 				    	p.setId("test"+iterator );
 				    	p.setAlt(req.getTypeId().toString());
-				    	String tmp = String.format("http://127.0.0.1:8080/HallsJSF/img/equip/eq%s.png",req.getTypeId().toString());
+				    	
+				    	for(int ii=0;ii<equipmentList.size();ii++){
+				    		if( equipmentList.get(ii).getId().equals(req.getTypeId())){
+				    			cFileName = equipmentList.get(ii).getIconURL();
+				    			break;
+				    		}
+				    		
+				    	}
+				    	
+				    	/*
+				    	switch(req.getTypeId()){
+				    		case 1: {cFileName="chair.png"; break;}
+				    		case 2: {cFileName="projector.png"; break;}
+				    		case 3: {cFileName="stand.png"; break;}
+				    		case 4: {cFileName="desk.png"; break;}
+				    		case 5: {cFileName=""; break;}
+				    		
+				    		default:{cFileName="";}
+				    	}*/
+				    	
+				    	//String tmp = String.format("http://127.0.0.1:8080/HallsJSF/img/equip/eq%s.png",req.getTypeId().toString());
+				    	String tmp = String.format("http://127.0.0.1:8080/HallsJSF/img/equip/%s",cFileName);
 				    	p.setValue(tmp);
 				    	if( (points!=null)&&(points.size()>0))
 				    		p.setStyle(String.format("position:absolute;top:%dpx;left:%dpx;", points.get(i).y, points.get(i).x));
 				    	else
 				    		p.setStyle(String.format("position:absolute;top:%dpx;left:%dpx;", 10, 10));
-				    	//p.setOnmouseup("setItemId(this.id)");
-				    	//p.setOndblclick("removeItem(this)");	    
 		
 				    	Draggable drag = new Draggable();	    	
 				    	drag.setFor("test"+iterator++);
@@ -378,5 +403,12 @@ public class RequestViewer implements Serializable {
 	public void getAllMeetingTypes(){
 		BaseNomManager man = new BaseNomManager();
 		meetingTypes = man.getAllNomRows("NOM_ME_TYPES");
+	}
+	
+	public void getAllRows(){		
+		if( manager==null)
+			manager = new BaseNomManager();
+		manager.setNomName("NOM_EQ_TYPES");
+		equipmentList = manager.getAllNomRows("NOM_EQ_TYPES");		
 	}
 }

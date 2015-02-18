@@ -393,7 +393,9 @@ public class Seats implements Serializable{
 		if( request!=null)
 		{
 			if( (request.getReq()!=null)&&(request.getReq().size()>0) )
-			{					
+			{		
+				String cFileName = "";
+				
 				for( Requirements req:request.getReq()){
 					String[] arrP = req.getPositions().split(";");
 					ArrayList<Point> points = null; 
@@ -407,8 +409,16 @@ public class Seats implements Serializable{
 					for( int i = 0;i<req.getCount();i++){
 						GraphicImage p = new GraphicImage();
 				    	p.setId("test"+iterator );
+				    	for(int ii=0;ii<equipmentList.size();ii++){
+				    		if( equipmentList.get(ii).getId().equals(req.getTypeId())){
+				    			cFileName = equipmentList.get(ii).getIconURL();
+				    			break;
+				    		}
+				    		
+				    	}
 				    	p.setAlt("eq"+ req.getTypeId().toString());
-				    	String tmp = String.format("http://127.0.0.1:8080/HallsJSF/img/equip/eq%s.png",req.getTypeId().toString());
+				    	//String tmp = String.format("http://127.0.0.1:8080/HallsJSF/img/equip/eq%s.png",req.getTypeId().toString());
+				    	String tmp = String.format("http://127.0.0.1:8080/HallsJSF/img/equip/%s",cFileName);
 				    	p.setValue(tmp);
 				    	if( (points!=null)&&(points.size()>0))
 				    		p.setStyle(String.format("position:absolute;top:%dpx;left:%dpx;", points.get(i).y, points.get(i).x));
