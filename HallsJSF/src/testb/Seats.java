@@ -119,6 +119,24 @@ public class Seats implements Serializable{
 		this.request = request;
 	}
 
+	private Integer readyEq;
+	public Integer getReadyEq() {
+		return readyEq;
+	}
+	public void setReadyEq(Integer readyEq) {
+		this.readyEq = readyEq;
+	}
+	
+	private ArrayList<BaseNomenclatureRow> equipmentList = null;
+	public ArrayList<BaseNomenclatureRow> getEquipmentList() {
+		return equipmentList;
+	}
+	public void setEquipmentList(ArrayList<BaseNomenclatureRow> equipmentList) {
+		this.equipmentList = equipmentList;
+	}
+	private String fileName = "";
+	private BaseNomManager manager;
+	
 	private MenuModel model;	
 	public MenuModel getModel() {
 		return model;
@@ -162,6 +180,7 @@ public class Seats implements Serializable{
 		startDate =  cal.getTime();
 		endDate =  cal.getTime();
 		getAllRequests();
+		getAllRows();
 	}	
 	
 	public void addElement(ActionEvent event) {
@@ -176,9 +195,9 @@ public class Seats implements Serializable{
 	    if (component != null) {	       
 	    	GraphicImage p = new GraphicImage();
 	    	p.setId("test"+iterator );
-	    	p.setAlt(mi.getId());
-	    	//p.setValue(String.format(".\\..\\img\\equip\\%s.png",mi.getId()));
-	    	p.setValue(String.format("http://127.0.0.1:8080/HallsJSF/img/equip/%s.png",mi.getId()));
+	    	p.setAlt(mi.getId());	    	
+	    	//p.setValue(String.format("http://127.0.0.1:8080/HallsJSF/img/equip/%s.png",mi.getId()));
+	    	p.setValue(fileName);
 	    	p.setStyle(String.format("position:absolute;top:%dpx;left:%dpx;", 10,10));	    
 	    	p.setOnmouseup("setItemId(this.id)");
 	    	p.setOndblclick("removeItem(this)");	    
@@ -354,7 +373,7 @@ public class Seats implements Serializable{
 		}
 	}
 	
-	public void addElements(Request  request) {
+	public void addElements() {
 		UIComponent component=null;
 		try{
 			component = FacesContext.getCurrentInstance().getViewRoot().
@@ -421,8 +440,7 @@ public class Seats implements Serializable{
 		}else
 			return new Point(0, 0);		
 	}
-	
-	
+		
 	public void getAllRequests(){    	
     	JdbcConnector oCon;
 		try {
@@ -446,19 +464,36 @@ public class Seats implements Serializable{
 	}
 	
 	public void setPositions(){
-		Request selReq = null;
 		if( readyReq>-1){
 			for( Request req:requestsList){
 				if( readyReq.equals(req.getId())){
-					selReq = req;
-					//setRequest(req);					
+					setRequest(req);
 					break;
 				}
 			}
 			
 			System.out.println("request "+request.getId());
-			addElements(selReq);
+			addElements();
 		}
 		System.out.println("readyReq "+ readyReq);
+	}
+	
+	public void setEquipment(){
+		if( readyEq>0){
+			for( BaseNomenclatureRow row:equipmentList){
+				if( readyEq.equals(row.getId())){
+					fileName = "http://127.0.0.1:8080/HallsJSF/img/equip/"+row.getIconURL();
+					break;
+				}
+			}
+		}
+	}
+	
+	public void getAllRows(){		
+		if( manager==null)
+			manager = new BaseNomManager();
+		manager.setNomName("NOM_EQ_TYPES");
+		equipmentList = manager.getAllNomRows("NOM_EQ_TYPES");
+		fileName = "http://127.0.0.1:8080/HallsJSF/img/equip/"+equipmentList.get(0).getIconURL();
 	}
 }

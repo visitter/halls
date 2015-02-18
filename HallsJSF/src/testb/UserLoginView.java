@@ -58,10 +58,12 @@ public class UserLoginView implements Serializable{
     }
     
     public String getLoggedUser() {
-    	System.out.println("logged user = "+FacesContext.getCurrentInstance().getExternalContext().getRemoteUser());
-    	setUsername( FacesContext.getCurrentInstance().getExternalContext().getRemoteUser() );
-    	if(username!=null)
-    		isAdmin = username.equalsIgnoreCase("admin"); 
-    	return FacesContext.getCurrentInstance().getExternalContext().getRemoteUser();
+    	if( FacesContext.getCurrentInstance().getExternalContext().getRemoteUser()!=null){
+    		System.out.println("logged user = "+FacesContext.getCurrentInstance().getExternalContext().getRemoteUser());
+    		setUsername( FacesContext.getCurrentInstance().getExternalContext().getRemoteUser() );
+    		if(username!=null)
+    			isAdmin = username.equalsIgnoreCase("admin"); 
+    		return FacesContext.getCurrentInstance().getExternalContext().getRemoteUser();
+    	} return "User not available";
     }
 }

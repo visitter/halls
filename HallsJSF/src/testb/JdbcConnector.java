@@ -221,7 +221,7 @@ public class JdbcConnector {
    public ArrayList<BaseNomenclatureRow> getAllNomRows(String nomname){
 	   ResultSet resultSet= null;
 	   try {
-		   String sql = String.format("SELECT ID, DESCRIPTION FROM %s", nomname);
+		   String sql = String.format("SELECT ID, DESCRIPTION, ICON_URL FROM %s", nomname);
 		   resultSet = statementNom.executeQuery(sql);
 		   		   
 		   ArrayList<BaseNomenclatureRow> arr=  new ArrayList<BaseNomenclatureRow>();
@@ -229,7 +229,8 @@ public class JdbcConnector {
 		   while(resultSet.next()){
 				arr.add( new BaseNomenclatureRow(
 										resultSet.getInt("ID"),
-										resultSet.getString("DESCRIPTION")
+										resultSet.getString("DESCRIPTION"),
+										resultSet.getString("ICON_URL")
 									)		 
 						);
 		   }
@@ -244,7 +245,7 @@ public class JdbcConnector {
 	   return null;
    }
    public Boolean insertIntoNom(BaseNomenclatureRow row){
-	   String sql = String.format("INSERT INTO %s (DESCRIPTION) VALUES('%s')", row.getNomName(), row.getDesc());
+	   String sql = String.format("INSERT INTO %s (DESCRIPTION,ICON_URL) VALUES('%s','%s')", row.getNomName(), row.getDesc(), row.getIconURL());
 	   try {
 		   return statementNom.executeUpdate(sql)>0;
 	   } catch (SQLException e) {
@@ -253,7 +254,21 @@ public class JdbcConnector {
 	   return false;
    }
    public Boolean updateNom(BaseNomenclatureRow row){
-	   String sql = String.format("UPDATE %s SET DESCRIPTION='%s' WHERE Id = %d", row.getNomName(), row.getDesc(), row.getId());
+	   String sql = "";
+	   if( row.getIconURL().trim().length()>0){		
+		   sql = String.format("UPDATE %s SET DESCRIPTION='%s', ICON_URL='%s' WHERE Id = %d",
+			   							row.getNomName(),
+			   							row.getDesc(),
+			   							row.getIconURL(),
+			   							row.getId()
+			   					  		);
+	   }else{
+		   sql = String.format("UPDATE %s SET DESCRIPTION='%s' WHERE Id = %d",
+				   						row.getNomName(),
+				   						row.getDesc(),						
+				   						row.getId()
+				  						);
+	   }	   
 	   try {
 		   return statementNom.executeUpdate(sql)>0;
 	   } catch (SQLException e) {
@@ -588,9 +603,9 @@ public class JdbcConnector {
 	   String sql;
 	   
 	   if(id>0){
-		  sql = String.format("SELECT MEI.EQ_ID, MEI.EQ_TYPE_ID, NQT.DESCRIPTION, MEI.EQ_COUNT_AVAILABLE FROM MAIN_EQUIPMENT_INVENTORY AS MEI INNER JOIN NOM_EQ_TYPES AS NQT ON NQT.ID = MEI.EQ_TYPE_ID WHERE NQT.ID = %d", id);	   
+		  sql = String.format("SELECT MEI.EQ_ID, MEI.EQ_TYPE_ID, NQT.DESCRIPTION, NQT,ICON_URL, MEI.EQ_COUNT_AVAILABLE FROM MAIN_EQUIPMENT_INVENTORY AS MEI INNER JOIN NOM_EQ_TYPES AS NQT ON NQT.ID = MEI.EQ_TYPE_ID WHERE NQT.ID = %d", id);	   
 	   }else {
-		  sql = "SELECT MEI.EQ_ID, MEI.EQ_TYPE_ID, NQT.DESCRIPTION, MEI.EQ_COUNT_AVAILABLE FROM MAIN_EQUIPMENT_INVENTORY AS MEI INNER JOIN NOM_EQ_TYPES AS NQT ON NQT.ID = MEI.EQ_TYPE_ID";
+		  sql = "SELECT MEI.EQ_ID, MEI.EQ_TYPE_ID, NQT.DESCRIPTION, NQT.ICON_URL, MEI.EQ_COUNT_AVAILABLE FROM MAIN_EQUIPMENT_INVENTORY AS MEI INNER JOIN NOM_EQ_TYPES AS NQT ON NQT.ID = MEI.EQ_TYPE_ID";
 	   }
 	  
 	   try {
@@ -601,7 +616,7 @@ public class JdbcConnector {
 		   while(res.next()){
 				arr.add( new Equipment(
 										res.getInt("EQ_ID"),
-									 	new BaseNomenclatureRow(res.getInt("EQ_TYPE_ID"), res.getString("DESCRIPTION")),
+									 	new BaseNomenclatureRow(res.getInt("EQ_TYPE_ID"), res.getString("DESCRIPTION"), res.getString("ICON_URL")),
 										res.getInt("EQ_COUNT_AVAILABLE")
 									)		 
 						);

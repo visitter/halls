@@ -101,9 +101,15 @@
 				            </f:facet>
 				            <h:outputText value="#{baseNomenclatureRow.desc}" />
 				        </p:column>
+				        
+				        <p:column>
+				            <f:facet name="header">
+				                <h:outputText value="Url" />				                
+				            </f:facet>
+				            <h:outputText value="#{baseNomenclatureRow.iconURL}" />
+				        </p:column>
 					</p:dataTable>
-					<p:fileUpload  fileUploadListener="#{nomsExporterView.upload}" mode="advanced" dragDropSupport="false"
-                          				update="messages" sizeLimit="100000" allowTypes="/(\.|\/)(gif|jpe?g|png)$/"  />	
+					
     			</p:layoutUnit>
     			
     			<p:layoutUnit position="west" resizable="true" size="320" minSize="320" maxSize="350"  style="width:660px;">
@@ -134,7 +140,7 @@
 		    </p:layout>	    
 		    
         </h:form>
-        <h:form id="form1">
+        <h:form id="form1" enctype="multipart/form-data">
       		<p:growl id="messages" showDetail="true"/>      		
       		<p:dialog id="dialog_save" header="Add new row" widgetVar="eventDialogSave" modal="true"
           		resizable="false" width="400" showEffect="clip" hideEffect="fold" >
@@ -142,15 +148,14 @@
 	            <h:panelGrid id="displaySave" columns="2" cellpadding="4">
 	                <h:outputText value="Description" />
 	                <p:inputText value="#{nomsExporterView.newRow.desc}" />
-                
-	                <h:outputText value="Id:" />
-	                <p:inputText value="#{nomsExporterView.newRow.id}" />
-	                
-	                
+					
+	                <h:outputText value="icon_url:" />	                
+					<p:fileUpload mode="simple" dragDropSupport="false"	value="#{nomsExporterView.fileName}"
+						update=":form1:messages" sizeLimit="100000" allowTypes="/(\.|\/)(gif|jpe?g|png)$/" style="width:200px;"/>
 	                
 	                <p:commandButton value="Exit" oncomplete="PF('eventDialogSave').hide();"/>
 					<p:commandButton id="insButton" value="Save" actionListener="#{nomsExporterView.insert}" style="float:right;"
-						update="messages" oncomplete="PF('eventDialogSave').hide();">						
+						ajax="false" update="messages" oncomplete="PF('eventDialogSave').hide();">						
 					</p:commandButton>					
 	            </h:panelGrid>
 	            <p:ajax event="close" listener="#{nomsExporterView.getAllRows}" update=":form:tbl"/>
@@ -165,7 +170,10 @@
 	                <p:inputText value="#{nomsExporterView.selectedRow.desc}" />	
 	                
 	                <h:outputText value="Id:" />
-	                <p:inputText value="#{nomsExporterView.selectedRow.id}" />
+	                <p:inputText value="#{nomsExporterView.selectedRow.id}" readonly="true"/>
+	                
+	                <h:outputText value="icon_url:" />
+	                <p:inputText value="#{nomsExporterView.selectedRow.iconURL}" />
 	                
 	                <p:commandButton value="Exit" oncomplete="PF('eventDialogDel').hide();"/>					
 					<p:commandButton id="remButton" value="Delete" actionListener="#{nomsExporterView.delete}" style="float:right;"
@@ -176,7 +184,7 @@
 	        </p:dialog>
         </h:form>
         
-        <h:form id="form2">
+        <h:form id="form2" enctype="multipart/form-data">
         	<p:dialog id="dialog_edit" header="Edit a row" widgetVar="eventDialogEdit" modal="true"
           		resizable="false" width="400" showEffect="clip" hideEffect="fold">
 
@@ -185,11 +193,15 @@
 	                <p:inputText value="#{nomsExporterView.selectedRow.desc}" />
 
 	                <h:outputText value="Id:" />
-	                <p:inputText value="#{nomsExporterView.selectedRow.id}" />
+	                <p:inputText value="#{nomsExporterView.selectedRow.id}" readonly="true"/>
+	                
+	                <h:outputText value="icon_url:" />
+	                <p:fileUpload mode="simple" dragDropSupport="false"	value="#{nomsExporterView.fileName}"
+						update=":form1:messages" sizeLimit="100000" allowTypes="/(\.|\/)(gif|jpe?g|png)$/" style="width:200px;"/>	                
 	                
 	                <p:commandButton value="Exit" oncomplete="PF('eventDialogEdit').hide();"/>					
 					<p:commandButton id="updButton" value="Update" actionListener="#{nomsExporterView.update}" style="float:right;"
-						update=":form:messages" oncomplete="PF('eventDialogEdit').hide();">						
+						ajax="false" update=":form:messages" oncomplete="PF('eventDialogEdit').hide();">						
 					</p:commandButton>
 	            </h:panelGrid>
 	            <p:ajax event="close" listener="#{nomsExporterView.getAllRows}" update=":form:tbl"/>

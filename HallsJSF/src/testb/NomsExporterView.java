@@ -6,6 +6,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Serializable;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,8 +16,8 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedProperty; 
 import javax.faces.context.FacesContext;
 
-import org.primefaces.event.FileUploadEvent;
 import org.primefaces.event.SelectEvent;
+import org.primefaces.model.UploadedFile;
 
 public class NomsExporterView implements Serializable {
   
@@ -59,40 +61,58 @@ public class NomsExporterView implements Serializable {
 		this.newRow = newRow;
 	}
 	
+	private UploadedFile fileName;
+	public UploadedFile getFileName() {
+		return fileName;
+	}
+	public void setFileName(UploadedFile fileName) {
+		this.fileName = fileName;
+	}
 	@PostConstruct
     public void init() {
-    	newRow = new BaseNomenclatureRow(0, "Нов");
+    	newRow = new BaseNomenclatureRow(0, "Нов", "");
     	manager = new BaseNomManager();
     }
 	
 	public void getAllRows(){		
 		manager.setNomName(nomName);
 		rows = manager.getAllNomRows(nomName);
-		
+				
 		if( rows==null){
 			rows = new ArrayList<BaseNomenclatureRow>();        	
         	if( selectedRow==null ){
-        		selectedRow =  new BaseNomenclatureRow(0, "Нов");            	
+        		selectedRow =  new BaseNomenclatureRow(0, "Нов", "");            	
             }        	
         	rows.add(selectedRow);        
         }else{
         
         }
-		setSelectedRow(rows.get(0));
+		setSelectedRow(rows.get(0));		
 	}
 	
 	public void update(){
+		String fileDBName = "";
+		if(fileName != null){
+			fileDBName = upload(fileName);
+		 }else System.out.println("filename is null");
+		
+		selectedRow.setIconURL(fileDBName);
 		selectedRow.setNomName(nomName);		
-		manager.update(selectedRow);
+		manager.update(selectedRow);		
 		getAllRows();		
 	}
 	
 	public void insert(){
 		System.out.println("Inserting...");
-		BaseNomenclatureRow row = new BaseNomenclatureRow( newRow.getId(), newRow.getDesc());
+		if(fileName != null){			 
+			 newRow.setIconURL(upload(fileName));
+		}else System.out.println("filename is null");
+		
+		BaseNomenclatureRow row = new BaseNomenclatureRow( newRow.getId(), newRow.getDesc(), newRow.getIconURL());
 		setSelectedRow(row);
 		row.setNomName(nomName);
 		manager.save(row);
+		
 		getAllRows();		
 	}
 	
@@ -110,40 +130,52 @@ public class NomsExporterView implements Serializable {
 	public void onRowSelect(SelectEvent event) {
 		setSelectedRow(((BaseNomenclatureRow) event.getObject()));
 		selectedRow.setNomName(nomName);
-    }	
-	public void upload(FileUploadEvent event) {  
-		System.out.println("uploading");
+    }
+	
+	public String upload(UploadedFile file) {
+		System.out.println("uploading...");
 		FacesMessage message = null;
-		try {
-			if( copyFile(event.getFile().getFileName(), event.getFile().getInputstream()) ){
-				message = new FacesMessage("Succesful", event.getFile().getFileName() + " is uploaded.");
+		String fileName = null;
+		try {			
+			Path p = Paths.get(file.getFileName());
+    		fileName = p.getFileName().toString();
+    		
+			if( copyFile( fileName, file.getInputstream()) ){
+				message = new FacesMessage("Succesful", fileName + " is uploaded.");			
 			}else{
-				message = new FacesMessage("Failed", event.getFile().getFileName() + " failed to upload.");
+				message = new FacesMessage("Failed", fileName + " failed to upload.");
+				fileName=null;
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
 			message = new FacesMessage("Failed", e.getMessage() + " failed to upload.");
+			fileName=null;
 		}
         FacesContext.getCurrentInstance().addMessage(null, message);
+    	return fileName;
     }
 	public Boolean copyFile(String fileName, InputStream in) {
-        try {
-             OutputStream out = new FileOutputStream(new File("C:\\Program Files (x86)\\Apache-Tomcat-7\\webapps\\HallsJSF\\img\\equip\\" + fileName));
-           
-             int read = 0;
-             byte[] bytes = new byte[1024];
-           
-             while ((read = in.read(bytes)) != -1) {
-                 out.write(bytes, 0, read);
-             }
-           
-             in.close();
-             out.flush();
-             out.close();
-             return true;
-             } catch (IOException e) {
-            	 System.out.println(e.getMessage());
-            	 return false;
-             }
+        try {        	
+        	if(nomName!=null){
+        		String path = "C:\\Program Files (x86)\\Apache-Tomcat-7\\webapps\\HallsJSF\\img\\equip\\";        		
+        		OutputStream out = new FileOutputStream(new File( path + fileName));
+        		
+	            int read = 0;
+	            byte[] bytes = new byte[1024];	           
+	            
+	            while ((read = in.read(bytes)) != -1) {
+	            	out.write(bytes, 0, read);
+	            }
+	           
+	            in.close();
+	            out.flush();
+	            out.close();
+	            return true;
+	        }else return false;
+        	
+        } catch (IOException e) {
+        	System.out.println(e.getMessage());
+            return false;
+        }
 	}
 }

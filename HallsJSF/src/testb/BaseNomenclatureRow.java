@@ -7,6 +7,7 @@ public class BaseNomenclatureRow implements Serializable{
 	private Integer id;
 	private String desc;
 	private String nomName;
+	private String iconURL;
 	
 	public Integer getId() {
 		return id;
@@ -26,12 +27,20 @@ public class BaseNomenclatureRow implements Serializable{
 	public void setNomName(String nomName) {
 		this.nomName = nomName;
 	}
+	public String getIconURL() {
+		return iconURL;
+	}
+	public void setIconURL(String iconURL) {
+		this.iconURL = iconURL;
+	}
+	
 	public BaseNomenclatureRow(){
 		super();
 	}
 	
-	public BaseNomenclatureRow(Integer id, String desc){
+	public BaseNomenclatureRow(Integer id, String desc, String iconURL){
 		setId(id);
 		setDesc(desc);
+		setIconURL(iconURL);
 	}
 }
